@@ -1,3 +1,2 @@
-black
 python-slugify
 impacket
