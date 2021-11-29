@@ -13,11 +13,17 @@ Clone from the git repo.
 
 This requires Impacket.
 
+### Requirements
+
+```python3
+pip3 install -r requirements.txt
+```
+
 ### Installing
 
 No installation is required.
 
-### Virtual Environment
+### Virtual Environment with venv
 
 #### Create
 ```python3
