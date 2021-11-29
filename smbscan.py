@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-#pip install python-slugify
-
 import sys
 import ipaddress
 import socket
