@@ -9,19 +9,11 @@ Unlike other tools, no write operations are performed. There is also a jitter op
 
 Clone from the git repo.
 
-### Prerequisites
-
-This requires Impacket.
-
-### Requirements
+### Installation
 
 ```python3
 pip3 install -r requirements.txt
 ```
-
-### Installing
-
-No installation is required.
 
 ### Virtual Environment with venv
 
