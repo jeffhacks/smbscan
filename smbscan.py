@@ -1,21 +1,23 @@
 #!/usr/bin/python
 
-import sys
-import ipaddress
-import socket
-import datetime
-import time
-import random
 import argparse
-import getpass
-import traceback
 import csv
-from impacket.smbconnection import SMBConnection, SessionError
+import datetime
+import getpass
+import ipaddress
+import random
+import socket
+import sys
+import time
+import traceback
+
 from impacket.smb import SMB_DIALECT
+from impacket.smbconnection import SMBConnection, SessionError
 from slugify import slugify
 
 class Options:
-	def __init__(self, hostname = 'SMBScan', logFileName = 'log', kerberos=False, port=139, timeout=2, jitter=3, aesKey = '', dc_ip = '', outputLogFileName = [], inclusionList = [], exclusionList = [], maximumDepth=0):
+	def __init__(self, hostname = 'SMBScan', 
+	logFileName = 'log', kerberos=False, port=139, timeout=2, jitter=3, aesKey = '', dc_ip = '', outputLogFileName = [], inclusionList = [], exclusionList = [], maximumDepth=0):
 		self.hostname = hostname
 		self.logFileName = logFileName
 		self.kerberos = kerberos
