@@ -17,6 +17,32 @@ This requires Impacket.
 
 No installation is required.
 
+### Virtual Environment
+
+#### Create
+```python3
+python -m venv env
+source env/bin/activate
+```
+
+#### Activate
+```python3
+source env/bin/activate
+```
+
+#### Deactivate
+```python3
+deactivate
+```
+
+
+#### Check which Python version is being used
+
+```python3
+which python
+which python3
+```
+
 ## Running the scans
 
 Scan a single target as guest
