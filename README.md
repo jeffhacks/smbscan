@@ -9,13 +9,37 @@ Unlike other tools, no write operations are performed. There is also a jitter op
 
 Clone from the git repo.
 
-### Prerequisites
+### Installation
 
-This requires Impacket.
+```python3
+pip3 install -r requirements.txt
+```
 
-### Installing
+### Virtual Environment with venv
 
-No installation is required.
+#### Create
+```python3
+python -m venv env
+source env/bin/activate
+```
+
+#### Activate
+```python3
+source env/bin/activate
+```
+
+#### Deactivate
+```python3
+deactivate
+```
+
+
+#### Check which Python version is being used
+
+```python3
+which python
+which python3
+```
 
 ## Running the scans
 
