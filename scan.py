@@ -6,7 +6,7 @@ import time
 
 from slugify import slugify
 
-from smbconnect import getClient, getShares
+from smb_connect import getClient, getShares
 from smb_file_operations import getFiles
 from print import printStatus, Colors
 
