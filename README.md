@@ -1,16 +1,13 @@
 # SMBScan
-
 SMB scanner for enumerating fileshares accross network ranges to aid in locating sensitive files that may have been inadvertently shared.
 The tool can scan individual hosts, ranges or read targets from a file.
 
 Unlike other tools, no write operations are performed. There is also a jitter option that can be used to slow the scan down to avoid detection.
 
 ## Getting Started
-
 Clone from the git repo.
 
 ### Installation
-
 ```python3
 pip3 install -r requirements.txt
 ```
@@ -33,16 +30,13 @@ source env/bin/activate
 deactivate
 ```
 
-
 #### Check which Python version is being used
-
 ```python3
 which python
 which python3
 ```
 
 ## Running the scans
-
 Scan a single target as guest
 ```
 python smbscan.py 192.168.0.0/24
@@ -67,39 +61,20 @@ prompt OFF
 mget *
 ```
 
-## Contributing
-
-BUGS
-- Currently does not create the logs subfolder if this does not already exist
-- Some issue with unicode maybe...'ascii' codec can't encode character u'\u2019' in position 10: ordinal not in range(128)
-
- TODO
- - Add parameter values used to scan output (useful to know what options were used to run when reviewing output later - max depth etc)
- - Prevent scanning of printers (permissions seems to fail this as guest but unknown result will occur if authenticated)
- - Add in-line documentation
-- Align parameters with smbclient
-- Try to suppress DNS lookups (see in-line todo)
-- Allow for saving sate and resuming or specify share name to resume from
-- Add stealth mode - monitor network for new arp/ip activity, add host to DB and scan
-- Add analysis script (include timestamps of analysis and separate log files)
-
-Useful docs and examples
+## Resources
+Useful documentation and examples
 - https://github.com/SecureAuthCorp/impacket/blob/master/impacket/smbconnection.py
 - https://github.com/SecureAuthCorp/impacket/blob/429f97a894d35473d478cbacff5919739ae409b4/impacket/smbconnection.py
 - https://docs.python.org/2/howto/argparse.html
 
 ## Versioning
-
 TBC
 
 ## Authors
-
 TBC
 
 ## License
-
 TBC
 
 ## Acknowledgments
-
 * Impacket
