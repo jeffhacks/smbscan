@@ -2,6 +2,7 @@
 
 import getpass
 import ipaddress
+import os
 import time
 
 from impacket.smb import SMB_DIALECT
@@ -31,13 +32,14 @@ def validIP(addr):
 
 def main():
     args = setup_command_line_args()
+    os.makedirs("logs", exist_ok=True)
 
     options = Options()
     options.jitter = args.jitter
     options.timeout = args.timeout
     options.logFileName = args.logFileName
     options.outputLogFileName = (
-        "logs/smbscan-" + time.strftime("%Y%m%d-%H%M%S") + ".txt"
+        "logs/smbscan-" + time.strftime("%Y%m%d-%H%M%S") + ".log"
     )
     options.crawlShares = not args.shares
     options.maximumDepth = args.maximumDepth
