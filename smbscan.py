@@ -43,6 +43,7 @@ def main():
     )
     options.crawlShares = not args.shares
     options.maximumDepth = args.maximumDepth
+    options.downloadFiles = args.downloadFiles
     if str(args.inclusionList) != "None":
         options.inclusionList = str(args.inclusionList).split(",")
     if str(args.exclusionList) != "None":

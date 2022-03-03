@@ -91,5 +91,11 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         type=int,
         default=0,
     )
+    parser.add_argument(
+        "-df", "--downloadFiles",
+        help="Download suspicious files. 0 (default) = no.",
+        action="store_true"
+    )
+
 
     return parser.parse_args()
