@@ -1,4 +1,5 @@
 #!/usr/bin/python
+__author__ = "jeffhacks"
 
 import getpass
 import ipaddress
