@@ -1,5 +1,6 @@
 import os
 import random
+import re
 import time
 
 from local_logging import createLogEntry
@@ -32,14 +33,7 @@ def listFiles(target, smbClient, share, sharePath, options, logFile, currentDept
             )
             share.sharedFiles.append(sharedFile)
 
-            keywords = [
-                "password",
-                "web.config",
-                "wp-config.php",
-                "passport",
-                "handover",
-            ]
-            if any(keyword in sharedFile.fileName for keyword in keywords):
+            if any(keyword in sharedFile.fileName.casefold() for keyword in options.keywords):
                 printStatus(
                     target,
                     Colors.OKBLUE,
