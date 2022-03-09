@@ -11,11 +11,11 @@ from print import print_status, Colors
 
 class Target:
     def __init__(self, ip):
-        self.ip = ip
-        self.name = ""
-        self.alias = ""
+        self.ip          = ip
+        self.name        = ""
+        self.alias       = ""
         self.addressList = ""
-        self.shares = []
+        self.shares      = []
         # TODO this is probably where the DNS lookup occurs
         try:
             self.name, self.alias, self.addressList = socket.gethostbyaddr(ip)
@@ -26,19 +26,17 @@ class Target:
             print(traceback.format_exc())
 
 class User:
-    def __init__(self, username="Guest", password="", domain="", lmhash="", nthash=""):
+    def __init__(self, username = "Guest", password = "", domain = "", lmhash = "", nthash = ""):
         self.username = username
         self.password = password
-        self.domain = domain
-        self.lmhash = lmhash
-        self.nthash = nthash
-        self.results = []
-
+        self.domain   = domain
+        self.lmhash   = lmhash
+        self.nthash   = nthash
+        self.results  = []
 
 def scan_range(targetIPRange, user, options):
     for targetIP in ipaddress.IPv4Network(str(targetIPRange)):
         scan_single(targetIP, user, options)
-
 
 def scan_single(targetHost, user, options):
     target = Target(str(targetHost))
