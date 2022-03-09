@@ -43,10 +43,16 @@ def main():
     )
     options.crawlShares = not args.shares
     options.maximumDepth = args.maximumDepth
+    options.keywordsFileName = args.keywordsFileName
+    options.downloadFiles = args.downloadFiles
     if str(args.inclusionList) != "None":
         options.inclusionList = str(args.inclusionList).split(",")
     if str(args.exclusionList) != "None":
         options.exclusionList = str(args.exclusionList).split(",")
+
+    with open(options.keywordsFileName, "r") as k_file:
+        for line in k_file:
+            options.keywords.append(line.strip().casefold())
 
     user = User()
     if args.user:

@@ -1,4 +1,6 @@
+import os
 import random
+import re
 import time
 
 from local_logging import createLogEntry
@@ -31,14 +33,7 @@ def listFiles(target, smbClient, share, sharePath, options, logFile, currentDept
             )
             share.sharedFiles.append(sharedFile)
 
-            keywords = [
-                "password",
-                "web.config",
-                "wp-config.php",
-                "passport",
-                "handover",
-            ]
-            if any(keyword in sharedFile.fileName for keyword in keywords):
+            if any(keyword in sharedFile.fileName.casefold() for keyword in options.keywords):
                 printStatus(
                     target,
                     Colors.OKBLUE,
@@ -51,6 +46,19 @@ def listFiles(target, smbClient, share, sharePath, options, logFile, currentDept
                     ),
                     options,
                 )
+
+                # Download file
+                if options.downloadFiles and not f.is_directory():
+                    downloadPath = os.path.join('logs', target.name, share.shareName, sharePath.lstrip('\\').replace('\\', os.path.sep))
+                    os.makedirs(downloadPath, exist_ok=True)
+                    print(downloadPath)
+
+                    downloadFile = os.path.join(downloadPath, f.get_longname())
+                    print(downloadFile)
+
+                    fh = open(downloadFile,'wb')
+                    smbClient.getFile(share.shareName, sharedFile.fullPath, fh.write)
+                    fh.close()
 
             createLogEntry(
                 options,

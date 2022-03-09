@@ -1,4 +1,5 @@
 import argparse
+import os
 
 class Options:
     def __init__(
@@ -15,6 +16,8 @@ class Options:
         inclusionList=[],
         exclusionList=[],
         maximumDepth=0,
+        keywordsFileName=os.path.join(os.path.dirname(__file__), "keywords.txt"),
+        downloadFiles=0
     ):
         self.hostname = hostname
         self.logFileName = logFileName
@@ -27,7 +30,10 @@ class Options:
         self.outputLogFileName = outputLogFileName
         self.inclusionList = inclusionList
         self.exclusionList = exclusionList
-        self.maximumDepth = maximumDepth
+        self.maximumDepth = maximumDepth,
+        self.keywordsFileName = keywordsFileName
+        self.keywords = []
+        self.downloadFiles = downloadFiles
 
 
 def setup_command_line_args(args = None) -> argparse.Namespace:
@@ -91,5 +97,16 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         type=int,
         default=0,
     )
+    parser.add_argument(
+        "-kf", "--keywordsFileName",
+        help="Specify keywords file. Default if unspecified is keywords.txt",
+        default=os.path.join(os.path.dirname(__file__), "keywords.txt")
+    )
+    parser.add_argument(
+        "-df", "--downloadFiles",
+        help="Download suspicious files. 0 (default) = no.",
+        action="store_true"
+    )
+
 
     return parser.parse_args()
