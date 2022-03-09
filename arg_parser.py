@@ -1,43 +1,42 @@
 import argparse
 import os
 
+
 class Options:
     def __init__(
         self,
-        hostname="SMBScan",
-        logFileName="log",
-        kerberos=False,
-        port=139,
-        timeout=2,
-        jitter=3,
-        aesKey="",
-        dc_ip="",
-        outputLogFileName=[],
-        inclusionList=[],
-        exclusionList=[],
-        maximumDepth=0,
-        keywordsFileName=os.path.join(os.path.dirname(__file__), "keywords.txt"),
-        downloadFiles=0
+        hostname          = "SMBScan",
+        logFileName       = "log",
+        kerberos          = False,
+        port              = 139,
+        timeout           = 2,
+        jitter            = 3,
+        aesKey            = "",
+        dc_ip             = "",
+        outputLogFileName = [],
+        inclusionList     = [],
+        exclusionList     = [],
+        maximumDepth      = 0,
+        keywordsFileName  = os.path.join(os.path.dirname(__file__), "./wordlists/keywords.txt"),
+        downloadFiles     = 0
     ):
-        self.hostname = hostname
-        self.logFileName = logFileName
-        self.kerberos = kerberos
-        self.port = port
-        self.timeout = timeout
-        self.jitter = jitter
-        self.aesKey = aesKey
-        self.dc_ip = dc_ip
+        self.hostname          = hostname
+        self.logFileName       = logFileName
+        self.kerberos          = kerberos
+        self.port              = port
+        self.timeout           = timeout
+        self.jitter            = jitter
+        self.aesKey            = aesKey
+        self.dc_ip             = dc_ip
         self.outputLogFileName = outputLogFileName
-        self.inclusionList = inclusionList
-        self.exclusionList = exclusionList
-        self.maximumDepth = maximumDepth,
-        self.keywordsFileName = keywordsFileName
-        self.keywords = []
-        self.downloadFiles = downloadFiles
-
+        self.inclusionList     = inclusionList
+        self.exclusionList     = exclusionList
+        self.maximumDepth      = maximumDepth,
+        self.keywordsFileName  = keywordsFileName
+        self.keywords          = []
+        self.downloadFiles     = downloadFiles
 
 def setup_command_line_args(args = None) -> argparse.Namespace:
-
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
@@ -107,6 +106,5 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         help="Download suspicious files. 0 (default) = no.",
         action="store_true"
     )
-
 
     return parser.parse_args()
