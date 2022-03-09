@@ -10,16 +10,7 @@ from slugify import slugify
 
 from arg_parser import setup_command_line_args, Options
 from print import printStatus, Colors
-from scan import scanRange, scanSingle
-
-class User:
-    def __init__(self, username="Guest", password="", domain="", lmhash="", nthash=""):
-        self.username = username
-        self.password = password
-        self.domain = domain
-        self.lmhash = lmhash
-        self.nthash = nthash
-        self.results = []
+from scan import scanRange, scanSingle, User
 
 
 def validIP(addr):
@@ -34,6 +25,7 @@ def main():
     args = setup_command_line_args()
     os.makedirs("logs", exist_ok=True)
 
+    # Refactor Options - config file?
     options = Options()
     options.jitter = args.jitter
     options.timeout = args.timeout
