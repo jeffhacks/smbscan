@@ -9,7 +9,7 @@ class Colors:
     UNDERLINE = "\033[4m"
 
 
-def printStatus(target, color, message, options):
+def print_status(target, color, message, options):
     statusSymbol = "[-]" if color == Colors.WARNING or color == Colors.FAIL else "[+]"
     if target is None:
         status = "%1s%2s %3s" % (color, statusSymbol, message)

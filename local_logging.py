@@ -1,6 +1,6 @@
 import csv
 
-def createLogEntry(options, username, servername, target, share, sharedFile, logFile):
+def create_log_entry(options, username, servername, target, share, sharedFile, logFile):
     row = [
         username,
         servername,

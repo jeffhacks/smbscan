@@ -9,11 +9,11 @@ from impacket.smb import SMB_DIALECT
 from slugify import slugify
 
 from arg_parser import setup_command_line_args, Options
-from print import printStatus, Colors
-from scan import scanRange, scanSingle, User
+from print import print_status, Colors
+from scan import scan_range, scan_single, User
 
 
-def validIP(addr):
+def valid_ip(addr):
     try:
         ipaddress.IPv4Network(str(addr))
         return True
@@ -53,23 +53,23 @@ def main():
         user.domain = args.domain if args.domain else ""
 
     if args.target:
-        printStatus(None, Colors.OKGREEN, "Scanning %1s" % (args.target), options)
-        if validIP(args.target):
-            scanRange(args.target, user, options)
+        print_status(None, Colors.OKGREEN, "Scanning %1s" % (args.target), options)
+        if valid_ip(args.target):
+            scan_range(args.target, user, options)
         else:
-            scanSingle(args.target, user, options)
+            scan_single(args.target, user, options)
     else:
         with args.file as file:
             target = file.readline().strip()
             while target:
-                printStatus(None, Colors.OKGREEN, "Scanning %1s" % (target), options)
-                if validIP(target):
-                    scanRange(target, user, options)
+                print_status(None, Colors.OKGREEN, "Scanning %1s" % (target), options)
+                if valid_ip(target):
+                    scan_range(target, user, options)
                 else:
-                    scanSingle(target, user, options)
+                    scan_single(target, user, options)
                 target = file.readline().strip()
 
-    printStatus(None, Colors.OKGREEN, "FINISHED", options)
+    print_status(None, Colors.OKGREEN, "FINISHED", options)
 
 
 if __name__ == "__main__":

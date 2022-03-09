@@ -5,8 +5,8 @@ import time
 
 from impacket.smbconnection import SMBConnection, SessionError
 
-from local_logging import createLogEntry
-from print import printStatus, Colors
+from local_logging import create_log_entry
+from print import print_status, Colors
 
 
 class Share:
@@ -24,14 +24,14 @@ class SharedFile:
         self.aTime       = aTime
         self.fileSize    = fileSize
 
-def getShares(smbClient, target):
+def get_shares(smbClient, target):
     resp = smbClient.listShares()
     for i in range(len(resp)):
         shareName = resp[i]["shi1_netname"][:-1]
         if shareName not in ["NETLOGON", "SYSVOL", "IPC$", "print$"]:
             target.shares.append(Share(shareName))
 
-def getClient(target, user, options, port):
+def get_client(target, user, options, port):
     try:
         smbClient = SMBConnection(
             "*\\*SMBSERVER*", target.ip, timeout=options.timeout, sess_port=int(port)
@@ -60,7 +60,7 @@ def getClient(target, user, options, port):
         # Host is live
         return smbClient
     except SessionError as e:
-        printStatus(
+        print_status(
             target,
             Colors.WARNING,
             "SESSION FAILURE: (%1s, %2s) %3s" % (user.username, str(port), str(e)),
@@ -70,10 +70,10 @@ def getClient(target, user, options, port):
         return None
     except Exception as e:
         if "timed out" in str(e):
-            None  # printStatus(target, Colors.WARNING, "CONNECTION FAILURE: " + str(e), options)
+            None  # print_status(target, Colors.WARNING, "CONNECTION FAILURE: " + str(e), options)
             # Host is not live
         elif "Connection refused" in str(e):
-            printStatus(
+            print_status(
                 target,
                 Colors.WARNING,
                 "CONNECTION FAILURE: (%1s, %2s) %3s"
@@ -82,7 +82,7 @@ def getClient(target, user, options, port):
             )
             # Host is live
         else:
-            printStatus(
+            print_status(
                 target,
                 Colors.FAIL,
                 "CONNECTION FAILURE: (%1s, %2s) %3s"
@@ -92,7 +92,7 @@ def getClient(target, user, options, port):
             # Host is live
         return None
 
-def listFiles(target, smbClient, share, sharePath, options, logFile, currentDepth):
+def list_files(target, smbClient, share, sharePath, options, logFile, currentDepth):
     try:
         for f in smbClient.listPath(share.shareName, sharePath + "\\*"):
             if f.get_longname() == "." or f.get_longname() == "..":
@@ -110,7 +110,7 @@ def listFiles(target, smbClient, share, sharePath, options, logFile, currentDept
             share.sharedFiles.append(sharedFile)
 
             if any(keyword in sharedFile.fileName.casefold() for keyword in options.keywords):
-                printStatus(
+                print_status(
                     target,
                     Colors.OKBLUE,
                     "%crw-rw-rw- %10d  %s %s"
@@ -136,7 +136,7 @@ def listFiles(target, smbClient, share, sharePath, options, logFile, currentDept
                     smbClient.getFile(share.shareName, sharedFile.fullPath, fh.write)
                     fh.close()
 
-            createLogEntry(
+            create_log_entry(
                 options,
                 smbClient.getCredentials()[0],
                 smbClient.getServerName(),
@@ -149,7 +149,7 @@ def listFiles(target, smbClient, share, sharePath, options, logFile, currentDept
             if f.is_directory() > 0 and (
                 options.maximumDepth == 0 or currentDepth < options.maximumDepth
             ):
-                listFiles(
+                list_files(
                     target,
                     smbClient,
                     share,
@@ -159,7 +159,7 @@ def listFiles(target, smbClient, share, sharePath, options, logFile, currentDept
                     currentDepth + 1,
                 )
     except Exception as e:
-        printStatus(
+        print_status(
             target,
             Colors.FAIL,
             "ERROR ACCESSING %1s: %3s" % (share.shareName, e),
@@ -170,10 +170,10 @@ def listFiles(target, smbClient, share, sharePath, options, logFile, currentDept
         if options.jitter > 0:
             time.sleep(random.randint(0, options.jitter))
 
-def getFiles(smbClient, target, options, logFile):
+def get_files(smbClient, target, options, logFile):
     for share in target.shares:
         if share.shareName in options.exclusionList:
-            printStatus(
+            print_status(
                 target,
                 Colors.WARNING,
                 "Skipping %1s (on exclusion list)" % (share.shareName),
@@ -181,22 +181,22 @@ def getFiles(smbClient, target, options, logFile):
             )
         elif len(options.inclusionList) > 0:
             if share.shareName in options.inclusionList:
-                printStatus(
+                print_status(
                     target,
                     Colors.OKBLUE,
                     "Scanning %1s (on inclusion list)" % (share.shareName),
                     options,
                 )
-                listFiles(target, smbClient, share, "", options, logFile, 1)
+                list_files(target, smbClient, share, "", options, logFile, 1)
             else:
-                printStatus(
+                print_status(
                     target,
                     Colors.WARNING,
                     "Skipping item %1s (not on inclusion list)" % (share.shareName),
                     options,
                 )
         else:
-            printStatus(
+            print_status(
                 target, Colors.OKBLUE, "Scanning %1s" % (share.shareName), options
             )
-            listFiles(target, smbClient, share, "", options, logFile, 1)
+            list_files(target, smbClient, share, "", options, logFile, 1)
