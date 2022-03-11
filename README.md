@@ -5,35 +5,16 @@ The tool can scan individual hosts, ranges or read targets from a file.
 Unlike other tools, no write operations are performed. There is also a jitter option that can be used to slow the scan down to avoid detection.
 
 ## Getting Started
-Clone from the git repo.
+
+Clone or download from the git repo.
+
+SMBScan is written in Python 3.7+, and requires `pip3` to install dependencies.
+
+It's recommended to use a Virtual Environment, to prevent dependency issues. See below, [Using virtualenv](#using-virtualenv)
 
 ### Installation
 ```python3
 pip3 install -r requirements.txt
-```
-
-### Virtual Environment with venv
-
-#### Create
-```python3
-python -m venv env
-source env/bin/activate
-```
-
-#### Activate
-```python3
-source env/bin/activate
-```
-
-#### Deactivate
-```python3
-deactivate
-```
-
-#### Check which Python version is being used
-```python3
-which python
-which python3
 ```
 
 ## Running the scans
@@ -59,6 +40,31 @@ mask ""
 recurse ON
 prompt OFF
 mget *
+```
+
+## Using virtualenv
+
+Read more [here](https://github.com/pypa/virtualenv)
+
+#### Create
+```python3
+python3 -m venv env
+source env/bin/activate
+```
+
+#### Activate
+```python3
+source env/bin/activate
+```
+
+#### Deactivate
+```python3
+deactivate
+```
+
+#### Check which Python version is being used
+```python3
+which python python2 python3
 ```
 
 ## Resources
