@@ -8,8 +8,6 @@ Unlike other tools, no write operations are performed. There is also a jitter op
 
 Clone or download from the git repo.
 
-SMBScan is written in Python 3.7+, and requires `pip3` to install dependencies.
-
 It's recommended to use a Virtual Environment, to prevent dependency issues. See below, [Using virtualenv](#using-virtualenv)
 
 ### Installation
