@@ -17,7 +17,7 @@ class Options:
         inclusionList     = [],
         exclusionList     = [],
         maximumDepth      = 0,
-        keywordsFileName  = os.path.join(os.path.dirname(__file__), "./wordlists/keywords.txt"),
+        keywordsFileName  = os.path.join(os.path.dirname(__file__), "wordlists", "keywords.txt"),
         downloadFiles     = 0
     ):
         self.hostname          = hostname
@@ -99,7 +99,7 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
     parser.add_argument(
         "-kf", "--keywordsFileName",
         help="Specify keywords file. Default if unspecified is keywords.txt",
-        default=os.path.join(os.path.dirname(__file__), "./wordlists/keywords.txt")
+        default=os.path.join(os.path.dirname(__file__), "wordlists", "keywords.txt")
     )
     parser.add_argument(
         "-df", "--downloadFiles",
