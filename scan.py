@@ -6,37 +6,44 @@ import time
 
 from slugify import slugify
 
-from smb_connect import getClient, getShares
-from smb_file_operations import getFiles
-from print import printStatus, Colors
+import scan_internals
+from print import print_status, Colors
 
 class Target:
     def __init__(self, ip):
-        self.ip = ip
-        self.name = ""
-        self.alias = ""
+        self.ip          = ip
+        self.name        = ""
+        self.alias       = ""
         self.addressList = ""
-        self.shares = []
+        self.shares      = []
         # TODO this is probably where the DNS lookup occurs
         try:
             self.name, self.alias, self.addressList = socket.gethostbyaddr(ip)
         except socket.herror:
             self.name = ip
         except Exception as e:
-            # printStatus(ip, Colors.FAIL, "TARGET FAILURE: " + str(e), options)
+            # print_status(ip, Colors.FAIL, "TARGET FAILURE: " + str(e), options)
             print(traceback.format_exc())
 
-def scanRange(targetIPRange, user, options):
+class User:
+    def __init__(self, username = "Guest", password = "", domain = "", lmhash = "", nthash = ""):
+        self.username = username
+        self.password = password
+        self.domain   = domain
+        self.lmhash   = lmhash
+        self.nthash   = nthash
+        self.results  = []
+
+def scan_range(targetIPRange, user, options):
     for targetIP in ipaddress.IPv4Network(str(targetIPRange)):
-        scanSingle(targetIP, user, options)
+        scan_single(targetIP, user, options)
 
-
-def scanSingle(targetHost, user, options):
+def scan_single(targetHost, user, options):
     target = Target(str(targetHost))
     # TODO This could potentially be noisier than needed. Consider only using port 445
-    smbClient = getClient(target, user, options, 445)
+    smbClient = scan_internals.get_client(target, user, options, 445)
     # if (smbClient is None):
-    # 	smbClient = getClient(target, user, options, 139)
+    # 	smbClient = get_client(target, user, options, 139)
     if smbClient != None:
         try:
             fileTimeStamp = time.strftime("%Y%m%d-%H%M%S")
@@ -51,18 +58,18 @@ def scanSingle(targetHost, user, options):
             )
             logFile = open(logFileName, "a")
 
-            printStatus(
+            print_status(
                 target,
                 Colors.OKGREEN,
                 "CONNECTED AS %1s - %2s" % (user.username, smbClient.getServerOS()),
                 options,
             )
-            getShares(smbClient, target)
+            scan_internals.get_shares(smbClient, target)
             if options.crawlShares:
-                getFiles(smbClient, target, options, logFile)
+                scan_internals.get_files(smbClient, target, options, logFile)
             user.results.append(target)
         except Exception as e:
-            printStatus(target, Colors.FAIL, "GENERAL FAILURE: " + str(e), options)
+            print_status(target, Colors.FAIL, "GENERAL FAILURE: " + str(e), options)
             print(traceback.format_exc())
         finally:
             smbClient.close()
