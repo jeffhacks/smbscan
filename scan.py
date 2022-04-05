@@ -1,4 +1,5 @@
 import ipaddress
+import logging
 import socket
 import traceback
 import random
@@ -7,7 +8,8 @@ import time
 from slugify import slugify
 
 import scan_internals
-from print import print_status, Colors
+
+logger = logging.getLogger('smbscan')
 
 class Target:
     def __init__(self, ip):
@@ -58,18 +60,14 @@ def scan_single(targetHost, user, options):
             )
             logFile = open(logFileName, "a")
 
-            print_status(
-                target,
-                Colors.OKGREEN,
-                "CONNECTED AS %1s - %2s" % (user.username, smbClient.getServerOS()),
-                options,
-            )
+            logger.info("CONNECTED AS %1s - %2s" % (user.username, smbClient.getServerOS()))
+            
             scan_internals.get_shares(smbClient, target)
             if options.crawlShares:
                 scan_internals.get_files(smbClient, target, options, logFile)
             user.results.append(target)
         except Exception as e:
-            print_status(target, Colors.FAIL, "GENERAL FAILURE: " + str(e), options)
+            logger.exception("GENERAL FAILURE: " + str(e))
             print(traceback.format_exc())
         finally:
             smbClient.close()
