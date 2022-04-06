@@ -72,8 +72,11 @@ def main():
     stdoutHandler.setFormatter(formatter)
     logger.addHandler(stdoutHandler)
 
+    # Record arguments
+    logger.info(' '.join(sys.argv[0:]))
+
     if args.target:
-        logger.info("Scanning %1s" % (args.target))
+        logger.info(f"Scanning {args.target}")
         if valid_ip(args.target):
             scan_range(args.target, user, options)
         else:
@@ -82,14 +85,14 @@ def main():
         with args.file as file:
             target = file.readline().strip()
             while target:
-                logger.info("Scanning %1s" % (target))
+                logger.info(f"Scanning {target}")
                 if valid_ip(target):
                     scan_range(target, user, options)
                 else:
                     scan_single(target, user, options)
                 target = file.readline().strip()
 
-    logger.info("FINISHED")
+    logger.info("Scan completed")
 
 
 if __name__ == "__main__":
