@@ -61,7 +61,8 @@ def get_client(target, user, options, port):
         # Host is live
         return smbClient
     except SessionError as e:
-        logger.error("SESSION FAILURE: (%1s, %2s) %3s" % (user.username, str(port), str(e)))
+        # logger.error("SESSION FAILURE: (%1s, %2s) %3s" % (user.username, str(port), str(e)))
+        logger.error(f"{target.ip} ({target.name}) SESSION FAILURE: ({user.username}, {str(port)}) {str(e)}")
         # Host is live
         return None
     except Exception as e:
@@ -70,10 +71,10 @@ def get_client(target, user, options, port):
             # logger.info("CONNECTION FAILURE: " + str(e))
             # Host is not live - do not log this
         elif "Connection refused" in str(e) or "Permission denied" in str(e):
-            logger.info("CONNECTION FAILURE: (%1s, %2s) %3s" % (user.username, str(port), str(e)))
+            logger.info(f"{target.ip} ({target.name}) CONNECTION FAILURE: %3s" % (str(e)))
             # Host is live
         else:
-            logger.exception("CONNECTION FAILURE: (%1s, %2s) %3s" % (user.username, str(port), str(e)))
+            logger.exception(f"{target.ip} ({target.name}) CONNECTION FAILURE: (%1s, %2s) %3s" % (user.username, str(port), str(e)))
             # Host is live
         return None
 
@@ -96,13 +97,13 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
 
             if any(keyword in sharedFile.fileName.casefold() for keyword in options.keywords):
                 logger.critical(
-                    f"Suspicous file: %10d %s %s"
+                    f"Suspicous file: %10d %s {sharedFile.fullPath}"
                     % (
                         f.get_filesize(),
-                        time.ctime(float(f.get_atime_epoch())),
-                        f.get_longname(),
+                        time.ctime(float(f.get_atime_epoch()))
                     )
                 )
+                logger.critical(f"Saved to: ")
 
                 # Download file
                 if options.downloadFiles and not f.is_directory():
@@ -141,7 +142,7 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
                 )
     except Exception as e:
         logger.exception(
-            "ERROR ACCESSING %1s: %3s" % (share.shareName, e)
+            f"{target.ip} ({target.name}) ERROR ACCESSING %1s: %3s" % (share.shareName, e)
         )
         return
     finally:
@@ -165,5 +166,5 @@ def get_files(smbClient, target, options, logFile):
                     "Skipping item %1s (not on inclusion list)" % (share.shareName)
                 )
         else:
-            logger.info("Scanning %1s" % (share.shareName))
+            logger.info(f"{target.ip} ({target.name}) Scanning \\\\{target.name}\\%1s" % (share.shareName))
             list_files(target, smbClient, share, "", options, logFile, 1)

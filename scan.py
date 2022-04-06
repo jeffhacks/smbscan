@@ -60,7 +60,7 @@ def scan_single(targetHost, user, options):
             )
             logFile = open(logFileName, "a")
 
-            logger.info("CONNECTED AS %1s - %2s" % (user.username, smbClient.getServerOS()))
+            logger.info(f"{target.ip} ({target.name}) SUCCESS CONNECTED AS %1s - %2s" % (user.username, smbClient.getServerOS()))
             
             scan_internals.get_shares(smbClient, target)
             if options.crawlShares:
