@@ -74,12 +74,6 @@ source env/bin/activate
 deactivate
 ```
 
-#### Check which Python version is being used
-```python3
-which python python2 python3
-```
-
-
 ## Resources
 Useful documentation and examples
 - https://github.com/SecureAuthCorp/impacket/blob/master/impacket/smbconnection.py
