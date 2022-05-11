@@ -3,14 +3,16 @@ __author__ = "jeffhacks"
 
 import getpass
 import ipaddress
+import logging
 import os
+import sys
 import time
 
 from impacket.smb import SMB_DIALECT
 from slugify import slugify
+from logging import handlers #import logging.handlers as handlers
 
 from arg_parser import setup_command_line_args, Options
-from print import print_status, Colors
 from scan import scan_range, scan_single, User
 
 
@@ -53,8 +55,28 @@ def main():
         user.password = args.password if args.password else getpass.getpass()
         user.domain   = args.domain if args.domain else ""
 
+    logger = logging.getLogger('smbscan')
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter("[%(asctime)s %(levelname)s] %(message)s",
+                                "%Y-%m-%d %H:%M:%S")
+
+    logFileHandler = handlers.RotatingFileHandler(options.outputLogFileName,
+                                            maxBytes=1024 * 1024 * 5,
+                                            backupCount=2)
+    logFileHandler.setLevel(logging.DEBUG)
+    logFileHandler.setFormatter(formatter)
+    logger.addHandler(logFileHandler)
+
+    stdoutHandler = logging.StreamHandler(sys.stdout)
+    stdoutHandler.setLevel(logging.DEBUG)
+    stdoutHandler.setFormatter(formatter)
+    logger.addHandler(stdoutHandler)
+
+    # Record arguments
+    logger.info(' '.join(sys.argv[0:]))
+
     if args.target:
-        print_status(None, Colors.OKGREEN, "Scanning %1s" % (args.target), options)
+        logger.info(f"Scanning {args.target}")
         if valid_ip(args.target):
             scan_range(args.target, user, options)
         else:
@@ -63,14 +85,14 @@ def main():
         with args.file as file:
             target = file.readline().strip()
             while target:
-                print_status(None, Colors.OKGREEN, "Scanning %1s" % (target), options)
+                logger.info(f"Scanning {target}")
                 if valid_ip(target):
                     scan_range(target, user, options)
                 else:
                     scan_single(target, user, options)
                 target = file.readline().strip()
 
-    print_status(None, Colors.OKGREEN, "FINISHED", options)
+    logger.info("Scan completed")
 
 
 if __name__ == "__main__":
