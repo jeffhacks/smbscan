@@ -8,8 +8,6 @@ Unlike other tools, no write operations are performed. There is also a jitter op
 
 Clone or download from the git repo.
 
-It's recommended to use a Virtual Environment, to prevent dependency issues. See below, [Using virtualenv](#using-virtualenv)
-
 ### Installation
 ```python3
 pip3 install -r requirements.txt
@@ -40,45 +38,10 @@ prompt OFF
 mget *
 ```
 
-## Using virtualenv
-
-Read more [here](https://github.com/pypa/virtualenv)
-
-#### Create
-```python3
-python3 -m venv env
-source env/bin/activate
-```
-
-#### Activate
-```python3
-source env/bin/activate
-```
-
-#### Deactivate
-```python3
-deactivate
-```
-
-#### Check which Python version is being used
-```python3
-which python python2 python3
-```
-
-## Resources
-Useful documentation and examples
-- https://github.com/SecureAuthCorp/impacket/blob/master/impacket/smbconnection.py
-- https://github.com/SecureAuthCorp/impacket/blob/429f97a894d35473d478cbacff5919739ae409b4/impacket/smbconnection.py
-- https://docs.python.org/2/howto/argparse.html
-
-## Versioning
-TBC
-
 ## Authors
-TBC
-
-## License
-TBC
+* Jeff Thomas - https://github.com/jeffhacks
+* Yianna Paris - https://github.com/nekosoft
 
 ## Acknowledgments
-* Impacket
+* Wireghoul - https://github.com/wireghoul
+* Impacket - https://github.com/SecureAuthCorp/impacket
