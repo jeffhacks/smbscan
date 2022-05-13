@@ -7,7 +7,7 @@
 ^.*\.ps1$
 ^.*\.sh$
 ^.*\.htpass$
-^.*(handover).*\.(doc|ppt|xls|txt).?$
+^.*(handover).*\.(txt|rtf|pdf|doc|ppt|xls).?$
 ^credentials$
 ^unattend\.xml$
 ^unattended\.xml$

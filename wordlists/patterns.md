@@ -2,7 +2,7 @@
 
 | Example Filename or Extension | Regular Expression | Description |
 | --- | --- | --- |
-| `My Passwords.txt` | `^.*(password\|credential\|logon).*\.(txt\|rtf\|doc\|xls).?$` | Text, RTF and Office files containing `password`, `credential`, or `logon` in the filename |
+| `My Passwords.txt` | `^.*(password\|credential\|logon).*\.(txt\|rtf\|doc\|xls).?$` | Text, RTF, and Office files containing `password`, `credential`, or `logon` in the filename |
 | `web.config`, `*.conf` | `^.*\.(cfg\|conf(ig)?)$` | Config files, e.g. `web.config` |
 | `wp-config.php`, `wp-config.bak` | `^.*wp-config.*$` | Wordpress config files e.g. `wp-config.php` and `wp-config.bak` |
 | `*.env` | `^.*\.env$` | Environment variables |
@@ -11,7 +11,7 @@
 | `*.ps1` | `^.*\.ps1$` | PowerShell scripts |
 | `*.sh` | `^.*\.sh$` | Shell scripts |
 | `*.htpass` | `^.*\.htpass$` | Usernames and passwords |
-| `Freds Handover.pptx` | `^.*(handover).*\.(doc\|ppt\|xls\|txt).?$` | Any files containing `handover` in the filename |
+| `Freds Handover.pptx` | `^.*(handover).*\.(txt\|rtf\|pdf\|doc\|ppt\|xls).?$` | Text, RTF, PDF, and Office files containing `handover` in the filename |
 | `credentials` | `^credentials$` | AWS Credentials file, e.g. `~/.aws/credentials` |
 | `unattend.xml `| `^unattend\.xml$` | Windows setup file |
 | `unattended.xml` | `^unattended\.xml$` | Windows setup file |
