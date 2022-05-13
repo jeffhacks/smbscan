@@ -5,6 +5,7 @@ import getpass
 import ipaddress
 import logging
 import os
+import re
 import sys
 import time
 
@@ -37,7 +38,7 @@ def main():
     )
     options.crawlShares       = not args.shares
     options.maximumDepth      = args.maximumDepth
-    options.keywordsFileName  = args.keywordsFileName
+    options.patternsFileName  = args.patternsFileName
     options.downloadFiles     = args.downloadFiles
     
     if str(args.inclusionList) != "None":
@@ -45,9 +46,9 @@ def main():
     if str(args.exclusionList) != "None":
         options.exclusionList = str(args.exclusionList).split(",")
 
-    with open(options.keywordsFileName, "r") as k_file:
+    with open(options.patternsFileName, "r") as k_file:
         for line in k_file:
-            options.keywords.append(line.strip().casefold())
+            options.patterns.append(re.compile(line.strip(), re.IGNORECASE))
 
     user = User()
     if args.user:
