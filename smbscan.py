@@ -5,6 +5,7 @@ import getpass
 import ipaddress
 import logging
 import os
+import re
 import sys
 import time
 
@@ -47,7 +48,7 @@ def main():
 
     with open(options.keywordsFileName, "r") as k_file:
         for line in k_file:
-            options.keywords.append(line.strip().casefold())
+            options.keywords.append(re.compile(line.strip(), re.IGNORECASE))
 
     user = User()
     if args.user:
