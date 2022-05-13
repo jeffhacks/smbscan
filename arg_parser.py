@@ -18,7 +18,7 @@ class Options:
         inclusionList     = [],
         exclusionList     = [],
         maximumDepth      = 0,
-        keywordsFileName  = setup.OS_PATH_DEFAULT_KEYWORD_PATH,
+        patternsFileName  = setup.OS_PATH_DEFAULT_PATTERN_PATH,
         downloadFiles     = 0
     ):
         self.hostname          = hostname
@@ -33,8 +33,8 @@ class Options:
         self.inclusionList     = inclusionList
         self.exclusionList     = exclusionList
         self.maximumDepth      = maximumDepth,
-        self.keywordsFileName  = keywordsFileName
-        self.keywords          = []
+        self.patternsFileName  = patternsFileName
+        self.patterns         = []
         self.downloadFiles     = downloadFiles
 
 def setup_command_line_args(args = None) -> argparse.Namespace:
@@ -98,9 +98,9 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         default=0,
     )
     parser.add_argument(
-        "-kf", "--keywordsFileName",
-        help="Specify keywords file. Default if unspecified is keywords.txt",
-        default=setup.OS_PATH_DEFAULT_KEYWORD_PATH
+        "-pf", "--patternsFileName",
+        help="Specify patterns file. Default if unspecified is patterns.txt",
+        default=setup.OS_PATH_DEFAULT_PATTERN_PATH
     )
     parser.add_argument(
         "-df", "--downloadFiles",

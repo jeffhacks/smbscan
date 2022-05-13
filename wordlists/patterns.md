@@ -1,8 +1,8 @@
-# Keywords
+# Patterns
 
 | Example Filename or Extension | Regular Expression | Description |
 | --- | --- | --- |
-| `My Passwords.txt` | `^.*(password\|credential\|logon).*\.(txt\|rtf\|doc\|xls).?$` | Any files containing `password` in the filename |
+| `My Passwords.txt` | `^.*(password\|credential\|logon).*\.(txt\|rtf\|doc\|xls).?$` | Text, RTF and Office files containing `password`, `credential`, or `logon` in the filename |
 | `web.config`, `*.conf` | `^.*\.(cfg\|conf(ig)?)$` | Config files, e.g. `web.config` |
 | `wp-config.php`, `wp-config.bak` | `^.*wp-config.*$` | Wordpress config files e.g. `wp-config.php` and `wp-config.bak` |
 | `*.env` | `^.*\.env$` | Environment variables |
