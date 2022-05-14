@@ -72,38 +72,35 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         default=2,
     )
     parser.add_argument(
-        "-s",
         "--shares-only",
         help="Display shares only. Do not crawl directories and files.",
         action="store_true"
     )
     parser.add_argument(
-        "-l", "--logfile", help="Override log file name (without extension)"
+        "--logfile", help="Override log file name (without extension)"
     )
     parser.add_argument(
-        "-i",
         "--include-shares",
         help="List of comma separated shares to include in scan. All others will be excluded.",
     )
     parser.add_argument(
-        "-e",
         "--exclude-shares",
         help="List of comma separated shares to exclude from scan. All others will be included.",
     )
     parser.add_argument(
-        "-m",
         "--max-depth",
         help="Maximum depth to crawl. 0 (default) = unlimited.",
         type=int,
         default=0,
     )
     parser.add_argument(
-        "-pf", "--patterns-file",
+        "--patterns-file",
         help="Specify patterns file. Default if unspecified is patterns.txt",
         default=setup.OS_PATH_DEFAULT_PATTERN_PATH
     )
     parser.add_argument(
-        "-df", "--download-files",
+        "-df",
+        "--download-files",
         help="Download suspicious files. 0 (default) = no.",
         action="store_true"
     )
