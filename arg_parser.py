@@ -17,6 +17,7 @@ class Options:
         csvFile           = [],
         includeShares     = [],
         excludeShares     = [],
+        excludeHosts     = [],
         maxDepth          = 0,
         patternsFile      = setup.OS_PATH_DEFAULT_PATTERN_PATH,
         downloadFiles     = 0
@@ -32,6 +33,7 @@ class Options:
         self.csvFile           = csvFile
         self.includeShares     = includeShares
         self.excludeShares     = excludeShares
+        self.excludeHosts      = excludeHosts
         self.maxDepth          = maxDepth,
         self.patternsFile      = patternsFile
         self.patterns          = []
@@ -86,6 +88,10 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
     parser.add_argument(
         "--exclude-shares",
         help="List of comma separated shares to exclude from scan. All others will be included.",
+    )
+    parser.add_argument(
+        "--exclude-hosts",
+        help="List of comma separated hosts to exclude from scan.",
     )
     parser.add_argument(
         "--max-depth",

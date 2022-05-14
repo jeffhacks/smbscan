@@ -41,36 +41,41 @@ def scan_range(targetIPRange, user, options):
         scan_single(targetIP, user, options)
 
 def scan_single(targetHost, user, options):
-    target = Target(str(targetHost))
-    # TODO This could potentially be noisier than needed. Consider only using port 445
-    smbClient = scan_internals.get_client(target, user, options, 445)
-    # if (smbClient is None):
-    # 	smbClient = get_client(target, user, options, 139)
-    if smbClient != None:
-        try:
-            fileTimeStamp = time.strftime("%Y%m%d-%H%M%S")
-            logfile = (
-                options.logfile
-                if options.logfile
-                else "logs/smbscan-"
-                + slugify(target.name)
-                + "-"
-                + fileTimeStamp
-                + ".csv"
-            )
-            logFile = open(logfile, "a")
+    if str(targetHost) in options.excludeHosts:
+        logger.warning(
+            "Skipping %1s (on exclusion list)" % (targetHost)
+        )
+    else:
+        target = Target(str(targetHost))
+        # TODO This could potentially be noisier than needed. Consider only using port 445
+        smbClient = scan_internals.get_client(target, user, options, 445)
+        # if (smbClient is None):
+        # 	smbClient = get_client(target, user, options, 139)
+        if smbClient != None:
+            try:
+                fileTimeStamp = time.strftime("%Y%m%d-%H%M%S")
+                logfile = (
+                    options.logfile
+                    if options.logfile
+                    else "logs/smbscan-"
+                    + slugify(target.name)
+                    + "-"
+                    + fileTimeStamp
+                    + ".csv"
+                )
+                logFile = open(logfile, "a")
 
-            logger.info(f"{target.ip} ({target.name}) Connected as {user.username}, Target OS: {smbClient.getServerOS()}")
-            
-            scan_internals.get_shares(smbClient, target)
-            if options.crawlShares:
-                scan_internals.get_files(smbClient, target, options, logFile)
-            user.results.append(target)
-        except Exception as e:
-            logger.exception("General failure: " + str(e))
-            #print(traceback.format_exc())
-        finally:
-            smbClient.close()
-            logFile.close()
-    if options.jitter > 0:
-        time.sleep(random.randint(0, options.jitter))
+                logger.info(f"{target.ip} ({target.name}) Connected as {user.username}, Target OS: {smbClient.getServerOS()}")
+                
+                scan_internals.get_shares(smbClient, target)
+                if options.crawlShares:
+                    scan_internals.get_files(smbClient, target, options, logFile)
+                user.results.append(target)
+            except Exception as e:
+                logger.exception("General failure: " + str(e))
+                #print(traceback.format_exc())
+            finally:
+                smbClient.close()
+                logFile.close()
+        if options.jitter > 0:
+            time.sleep(random.randint(0, options.jitter))
