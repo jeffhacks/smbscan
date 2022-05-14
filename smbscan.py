@@ -45,6 +45,8 @@ def main():
         options.includeShares = str(args.include_shares).split(",")
     if str(args.exclude_shares) != "None":
         options.excludeShares = str(args.exclude_shares).split(",")
+    if str(args.exclude_hosts) != "None":
+        options.excludeHosts = str(args.exclude_hosts).split(",")
 
     with open(options.patternsFile, "r") as k_file:
         for line in k_file:
