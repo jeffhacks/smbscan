@@ -49,16 +49,16 @@ def scan_single(targetHost, user, options):
     if smbClient != None:
         try:
             fileTimeStamp = time.strftime("%Y%m%d-%H%M%S")
-            logFileName = (
-                options.logFileName
-                if options.logFileName
+            logfile = (
+                options.logfile
+                if options.logfile
                 else "logs/smbscan-"
                 + slugify(target.name)
                 + "-"
                 + fileTimeStamp
                 + ".csv"
             )
-            logFile = open(logFileName, "a")
+            logFile = open(logfile, "a")
 
             logger.info(f"{target.ip} ({target.name}) Connected as {user.username}, Target OS: {smbClient.getServerOS()}")
             

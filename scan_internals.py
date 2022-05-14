@@ -123,7 +123,7 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
             )
 
             if f.is_directory() > 0 and (
-                options.maximumDepth == 0 or currentDepth < options.maximumDepth
+                options.maxDepth == 0 or currentDepth < options.maxDepth
             ):
                 list_files(
                     target,
@@ -144,12 +144,12 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
 
 def get_files(smbClient, target, options, logFile):
     for share in target.shares:
-        if share.shareName in options.exclusionList:
+        if share.shareName in options.excludeShares:
             logger.warning(
                 "Skipping %1s (on exclusion list)" % (share.shareName)
             )
-        elif len(options.inclusionList) > 0:
-            if share.shareName in options.inclusionList:
+        elif len(options.includeShares) > 0:
+            if share.shareName in options.includeShares:
                 logger.info(
                     "Scanning %1s (on inclusion list)" % (share.shareName)
                 )
