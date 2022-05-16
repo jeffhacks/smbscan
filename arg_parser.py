@@ -12,12 +12,14 @@ class Options:
         port              = 139,
         timeout           = 2,
         jitter            = 3,
+        jitter_target     = 3,
+        jitter_operation  = 3,
         aesKey            = "",
         dc_ip             = "",
         csvFile           = [],
         includeShares     = [],
         excludeShares     = [],
-        excludeHosts     = [],
+        excludeHosts      = [],
         maxDepth          = 0,
         patternsFile      = setup.OS_PATH_DEFAULT_PATTERN_PATH,
         downloadFiles     = 0
@@ -28,6 +30,8 @@ class Options:
         self.port              = port
         self.timeout           = timeout
         self.jitter            = jitter
+        self.jitter_target     = jitter_target
+        self.jitter_operation  = jitter_operation
         self.aesKey            = aesKey
         self.dc_ip             = dc_ip
         self.csvFile           = csvFile
@@ -65,6 +69,18 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         help="Random delay between some requests. Default 3 seconds.",
         type=int,
         default=3,
+    )
+    parser.add_argument(
+        "-jt",
+        "--jitter-target",
+        help="Random delay before moving to next target. Default 3 seconds.",
+        type=int,
+    )
+    parser.add_argument(
+        "-jo",
+        "--jitter-operation",
+        help="Random delay between some file operations on target. Default 3 seconds.",
+        type=int,
     )
     parser.add_argument(
         "-t",

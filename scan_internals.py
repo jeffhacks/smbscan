@@ -139,8 +139,8 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
         logger.debug(f"{e}")
         return
     finally:
-        if options.jitter > 0:
-            time.sleep(random.randint(0, options.jitter))
+        if options.jitter_operation > 0:
+            time.sleep(random.randint(0, options.jitter_operation))
 
 def get_files(smbClient, target, options, logFile):
     for share in target.shares:
