@@ -26,10 +26,11 @@ class SharedFile:
         self.fileSize    = fileSize
 
 def get_shares(smbClient):
+    """Get SMB shares from client and return a list."""
     shares = []
     resp = smbClient.listShares()
     for i in range(len(resp)):
-        shareName = resp[i]["shi1_netname"][:-1] 
+        shareName = resp[i]["shi1_netname"][:-1]
         if shareName not in ["NETLOGON", "SYSVOL", "IPC$", "print$"]:
             shares.append(Share(shareName))
     return shares
