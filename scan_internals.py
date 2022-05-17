@@ -26,7 +26,7 @@ class SharedFile:
         self.fileSize    = fileSize
 
 def get_shares(smbClient):
-    """Get SMB shares from client and return a list."""
+    """Get SMB share names from client and return a list."""
     shares = []
     resp = smbClient.listShares()
     for i in range(len(resp)):
