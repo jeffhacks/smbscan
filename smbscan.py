@@ -32,21 +32,23 @@ def main():
     options = Options()
     options.jitter            = args.jitter
     options.timeout           = args.timeout
-    options.logFileName       = args.logFileName
-    options.outputLogFileName = (
+    options.logfile           = args.logfile
+    options.csvFile           = (
         "logs/smbscan-" + time.strftime("%Y%m%d-%H%M%S") + ".log"
     )
-    options.crawlShares       = not args.shares
-    options.maximumDepth      = args.maximumDepth
-    options.patternsFileName  = args.patternsFileName
-    options.downloadFiles     = args.downloadFiles
+    options.crawlShares       = not args.shares_only
+    options.maxDepth          = args.max_depth
+    options.patternsFile      = args.patterns_file
+    options.downloadFiles     = args.download_files
     
-    if str(args.inclusionList) != "None":
-        options.inclusionList = str(args.inclusionList).split(",")
-    if str(args.exclusionList) != "None":
-        options.exclusionList = str(args.exclusionList).split(",")
+    if str(args.include_shares) != "None":
+        options.includeShares = str(args.include_shares).split(",")
+    if str(args.exclude_shares) != "None":
+        options.excludeShares = str(args.exclude_shares).split(",")
+    if str(args.exclude_hosts) != "None":
+        options.excludeHosts = str(args.exclude_hosts).split(",")
 
-    with open(options.patternsFileName, "r") as k_file:
+    with open(options.patternsFile, "r") as k_file:
         for line in k_file:
             options.patterns.append(re.compile(line.strip(), re.IGNORECASE))
 
@@ -61,7 +63,7 @@ def main():
     formatter = logging.Formatter("[%(asctime)s %(levelname)s] %(message)s",
                                 "%Y-%m-%d %H:%M:%S")
 
-    logFileHandler = handlers.RotatingFileHandler(options.outputLogFileName,
+    logFileHandler = handlers.RotatingFileHandler(options.csvFile,
                                             maxBytes=1024 * 1024 * 5,
                                             backupCount=2)
     logFileHandler.setLevel(logging.DEBUG)
