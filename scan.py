@@ -67,7 +67,8 @@ def scan_single(targetHost, user, options):
 
                 logger.info(f"{target.ip} ({target.name}) Connected as {user.username}, Target OS: {smbClient.getServerOS()}")
                 
-                scan_internals.get_shares(smbClient, target)
+                target.shares = scan_internals.get_shares(smbClient)
+                
                 if options.crawlShares:
                     scan_internals.get_files(smbClient, target, options, logFile)
                 user.results.append(target)
