@@ -23,19 +23,27 @@ It's primary goals are:
 Clone or download from the git repo.
 
 ### Installation
-```python3
+```bash
 pip3 install -r requirements.txt
 ```
 
 ---
 ## Running scans
 Scan a single target as guest
-```
+```bash
 python smbscan.py 192.168.0.0/24
 ```
 
-Scan a range of targets as a specific domain user with a random delay of 1-3 seconds between targets and operations on targets:
+```log
+[2022-05-21 22:14:17 INFO] ./smbscan.py -f ../targets.txt
+[2022-05-21 22:14:17 INFO] Scanning 192.168.2.26
+[2022-05-21 22:14:17 INFO] 192.168.2.26 (TESTSERVER) Connected as tester, Target OS: eWeblrdS
+[2022-05-21 22:14:17 INFO] 192.168.2.26 (TESTSERVER) Scanning \\TESTSERVER\TESTER
+[2022-05-21 22:14:17 CRITICAL] Suspicous file: \\TESTSERVER\TESTER\.ssh\id_rsa.pub (Sat May 21 21:12:21 2022, 563)
 ```
+
+Scan a range of targets as a specific domain user with a random delay of 1-3 seconds between targets and operations on targets:
+```bash
 python smbscan.py -f targetranges.txt -u testuser -d internal -j 3
 ```
 
