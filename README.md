@@ -46,7 +46,7 @@ logs
 │   smbscan-20220518-075257.log
 |   smbscan-<TARGET>-<YYYYMMDD>-<HHMMSS>.csv
 │   smbscan-desktop-9kolm4-20220518-075257.csv
-│   smbscan-kali-20220518-075257.csv
+│   smbscan-testserver-20220518-075257.csv
 │
 └───<TARGET>
 │   └───<SHARE>
@@ -58,10 +58,10 @@ logs
 │       └───wwwroot
 │           │   web.config
 │   
-└───Kali
+└───TESTSERVER
 │   └───TESTER
 │       └───.aws
-│           |   file022.txt
+│           |   credentials
 │       └───.ssh
 │           |   id_rsa.pub
 ```
