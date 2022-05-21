@@ -41,7 +41,30 @@ python smbscan.py -f targetranges.txt -u testuser -d internal -j 3
 
 ---
 ## Analysing Output
-
+```
+logs
+│   smbscan-20220518-075257.log
+|   smbscan-<TARGET>-<YYYYMMDD>-<HHMMSS>.csv
+│   smbscan-desktop-9kolm4-20220518-075257.csv
+│   smbscan-kali-20220518-075257.csv
+│
+└───<TARGET>
+│   └───<SHARE>
+│       └───<DIRECTORY>
+│           │   suspicious-file
+|
+└───DESKTOP-9KOLKM4
+│   └───inetpub
+│       └───wwwroot
+│           │   web.config
+│   
+└───Kali
+│   └───TESTER
+│       └───.aws
+│           |   file022.txt
+│       └───.ssh
+│           |   id_rsa.pub
+```
 
 ---
 ## Authors
