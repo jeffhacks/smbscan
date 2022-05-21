@@ -12,8 +12,8 @@ class Options:
         port              = 139,
         timeout           = 2,
         jitter            = 3,
-        jitter_target     = 3,
-        jitter_operation  = 3,
+        jitterTarget      = 3,
+        jitterOperation   = 3,
         aesKey            = "",
         dc_ip             = "",
         csvFile           = [],
@@ -30,8 +30,8 @@ class Options:
         self.port              = port
         self.timeout           = timeout
         self.jitter            = jitter
-        self.jitter_target     = jitter_target
-        self.jitter_operation  = jitter_operation
+        self.jitterTarget      = jitterTarget
+        self.jitterOperation   = jitterOperation
         self.aesKey            = aesKey
         self.dc_ip             = dc_ip
         self.csvFile           = csvFile

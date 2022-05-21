@@ -31,8 +31,8 @@ def main():
     # Refactor Options - config file?
     options = Options()
     options.jitter            = args.jitter
-    options.jitter_target     = args.jitter if args.jitter_target is None else args.jitter_target
-    options.jitter_operation  = args.jitter if args.jitter_operation is None else args.jitter_operation
+    options.jitterTarget     = args.jitter if args.jitter_target is None else args.jitter_target
+    options.jitterOperation  = args.jitter if args.jitter_operation is None else args.jitter_operation
     options.timeout           = args.timeout
     options.logfile           = args.logfile
     options.csvFile           = (
