@@ -41,6 +41,15 @@ python smbscan.py -f targetranges.txt -u testuser -d internal -j 3
 
 ---
 ## Analysing Output
+SMBScan produces a number of files.
+
+* Primary logfile
+  * A primary logfile for each scan - records everything that's output to the terminal
+* File listing CSV files
+  * A listing of all accessible shares and files. One CSV file per target
+* Downloaded files
+  * A collection of downloaded suspicious files (if download is enabled). Structured by TARGET\SHARE\DIRECTORY\FILE
+
 ```
 logs
 │   smbscan-20220518-075257.log
