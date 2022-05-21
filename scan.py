@@ -78,5 +78,5 @@ def scan_single(targetHost, user, options):
             finally:
                 smbClient.close()
                 logFile.close()
-        if options.jitter > 0:
-            time.sleep(random.randint(0, options.jitter))
+        if options.jitterTarget > 0:
+            time.sleep(random.randint(0, options.jitterTarget))
