@@ -31,8 +31,8 @@ def main():
     # Refactor Options - config file?
     options = Options()
     options.jitter            = args.jitter
-    options.jitterTarget     = args.jitter if args.jitter_target is None else args.jitter_target
-    options.jitterOperation  = args.jitter if args.jitter_operation is None else args.jitter_operation
+    options.jitterTarget      = args.jitter if args.jitter_target is None else args.jitter_target
+    options.jitterOperation   = args.jitter if args.jitter_operation is None else args.jitter_operation
     options.timeout           = args.timeout
     options.logfile           = args.logfile
     options.csvFile           = (
@@ -42,6 +42,7 @@ def main():
     options.maxDepth          = args.max_depth
     options.patternsFile      = args.patterns_file
     options.downloadFiles     = args.download_files
+    options.logLevel          = logging.DEBUG if args.debug else logging.INFO
     
     if str(args.include_shares) != "None":
         options.includeShares = str(args.include_shares).split(",")
@@ -61,19 +62,19 @@ def main():
         user.domain   = args.domain if args.domain else ""
 
     logger = logging.getLogger('smbscan')
-    logger.setLevel(logging.INFO)
+    logger.setLevel(options.logLevel)
     formatter = logging.Formatter("[%(asctime)s %(levelname)s] %(message)s",
                                 "%Y-%m-%d %H:%M:%S")
 
     logFileHandler = handlers.RotatingFileHandler(options.csvFile,
                                             maxBytes=1024 * 1024 * 5,
                                             backupCount=2)
-    logFileHandler.setLevel(logging.INFO)
+    logFileHandler.setLevel(options.logLevel)
     logFileHandler.setFormatter(formatter)
     logger.addHandler(logFileHandler)
 
     stdoutHandler = logging.StreamHandler(sys.stdout)
-    stdoutHandler.setLevel(logging.INFO)
+    stdoutHandler.setLevel(options.logLevel)
     stdoutHandler.setFormatter(formatter)
     logger.addHandler(stdoutHandler)
 
