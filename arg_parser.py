@@ -1,4 +1,5 @@
 import argparse
+import logging
 
 import setup
 
@@ -22,7 +23,8 @@ class Options:
         excludeHosts      = [],
         maxDepth          = 0,
         patternsFile      = setup.OS_PATH_DEFAULT_PATTERN_PATH,
-        downloadFiles     = 0
+        downloadFiles     = 0,
+        logLevel          = logging.INFO
     ):
         self.hostname          = hostname
         self.logfile           = logfile
@@ -42,6 +44,7 @@ class Options:
         self.patternsFile      = patternsFile
         self.patterns          = []
         self.downloadFiles     = downloadFiles
+        self.logLevel          = logLevel
 
 def setup_command_line_args(args = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -124,6 +127,11 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         "-df",
         "--download-files",
         help="Download suspicious files. 0 (default) = no.",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--debug",
+        help="Include debug messages in terminal output.",
         action="store_true"
     )
 
