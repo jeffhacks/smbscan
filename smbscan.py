@@ -61,19 +61,19 @@ def main():
         user.domain   = args.domain if args.domain else ""
 
     logger = logging.getLogger('smbscan')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     formatter = logging.Formatter("[%(asctime)s %(levelname)s] %(message)s",
                                 "%Y-%m-%d %H:%M:%S")
 
     logFileHandler = handlers.RotatingFileHandler(options.csvFile,
                                             maxBytes=1024 * 1024 * 5,
                                             backupCount=2)
-    logFileHandler.setLevel(logging.DEBUG)
+    logFileHandler.setLevel(logging.INFO)
     logFileHandler.setFormatter(formatter)
     logger.addHandler(logFileHandler)
 
     stdoutHandler = logging.StreamHandler(sys.stdout)
-    stdoutHandler.setLevel(logging.DEBUG)
+    stdoutHandler.setLevel(logging.INFO)
     stdoutHandler.setFormatter(formatter)
     logger.addHandler(stdoutHandler)
 
