@@ -3,20 +3,20 @@
 ### Overview
 SMBScan is a tool developed to enumerate file shares on an internal network.
 
-It's primary goals are:
+It's primary objectives are:
 
 * Scan a single target or hundreds of targets
 * Enumerate all accessible shares and files
 * Identify files that potentially contain credentials or secrets
 * Try to avoid detection by blue teams
 
-
-
 ### Table of Contents
 1. [Getting Started](#getting-started)
 2. [Running Scans](#running-scans)
-3. [Scan Output](#analysing-output)
-4. [Fourth Example](#fourth-examplehttpwwwfourthexamplecom)
+3. [Scan Output](#scan-output)
+4. [Analysing Output](#analysing-output)
+5. [Authors](#authors)
+6. [Acknowledgements](#acknowledgments)
 
 ---
 ## Getting Started
@@ -35,14 +35,13 @@ python smbscan.py 192.168.0.0/24
 ```
 
 ```log
-[2022-05-21 22:14:17 INFO] ./smbscan.py 192.168.0.0/24 -u tester -p Monkey123 ---download-files --max-depth 3 --exclude-hosts 192.168.0.18
-[2022-05-22 20:45:36 INFO] Scanning 192.168.0.0/24
+[2022-05-21 22:14:17 INFO] ./smbscan.py 192.168.0.26
+[2022-05-22 20:45:36 INFO] Scanning 192.168.0.26
 [2022-05-21 22:14:17 INFO] 192.168.0.26 (TESTSERVER) Connected as tester, Target OS: eWeblrdS
 [2022-05-21 22:14:17 INFO] 192.168.0.26 (TESTSERVER) Scanning \\TESTSERVER\TESTER
 [2022-05-21 22:14:17 CRITICAL] Suspicous file: \\TESTSERVER\TESTER\.ssh\id_rsa.pub (Sat May 21 21:12:21 2022, 563)
 [2022-05-21 22:14:17 CRITICAL] Suspicous file: \\TESTSERVER\TESTER\.ssh\id_rsa (Sat May 21 21:12:21 2022, 2590)
 [2022-05-21 22:14:18 CRITICAL] Suspicous file: \\TESTSERVER\TESTER\.aws\credentials (Sat May 21 21:12:23 2022, 119)
-[2022-05-22 20:45:36 INFO] 192.168.0.35 (desktop-9kolkm4) Connection failure: [Errno Connection error (192.168.0.1:445)] [Errno 61] Connection refused
 [2022-05-21 22:14:26 INFO] Scan completed
 ```
 
@@ -77,12 +76,12 @@ python smbscan.py 192.168.0.0/24 -u tester -p Monkey123 ---download-files --max-
 ```
 
 ---
-## Analysing Output
+## Scan Output
 SMBScan produces a number of files.
 
 * Primary logfile
   * A primary logfile for each scan - records everything that's output to the terminal
-* File listing CSV files
+* CSV index files
   * A listing of all accessible shares and files. One CSV file per target
 * Downloaded files
   * A collection of downloaded suspicious files (if download is enabled). Structured by TARGET\SHARE\DIRECTORY\FILE
@@ -90,7 +89,6 @@ SMBScan produces a number of files.
 ```
 logs
 │   smbscan-20220518-075257.log
-|   smbscan-<TARGET>-<YYYYMMDD>-<HHMMSS>.csv
 │   smbscan-desktop-9kolm4-20220518-075257.csv
 │   smbscan-testserver-20220518-075257.csv
 │
@@ -114,6 +112,36 @@ logs
 │           |   credentials
 │       └───.ssh
 │           |   id_rsa.pub
+```
+
+---
+## Analysing Output
+
+### Search Downloaded Files
+Use grep, or speed up the process with graudit (https://github.com/wireghoul/graudit)
+```bash
+graudit -d secrets -x *.csv logs/
+```
+
+### View CSV Files
+```bash
+cat smbscan-desktop-9kolm4-20220518-075257.csv | sed -e 's/,,/, ,/g' | column -s, -t | less -#5 -N -S
+```
+
+```
+1 tester  DESKTOP-9KOLKM4  desktop-9kolkm4  192.168.0.35  Backups  \MSSQL
+2 tester  DESKTOP-9KOLKM4  desktop-9kolkm4  192.168.0.35  Backups  \MSSQL\BookingSystem.bak
+3 tester  DESKTOP-9KOLKM4  desktop-9kolkm4  192.168.0.35  inetpub  \wwwroot
+4 tester  DESKTOP-9KOLKM4  desktop-9kolkm4  192.168.0.35  inetpub  \wwwroot\index.cs
+5 tester  DESKTOP-9KOLKM4  desktop-9kolkm4  192.168.0.35  inetpub  \wwwroot\Robots.txt
+6 tester  DESKTOP-9KOLKM4  desktop-9kolkm4  192.168.0.35  inetpub  \wwwroot\web.config
+```
+
+### Search CSV Files
+```bash
+grep -i -e \.bak *.csv
+
+tester,DESKTOP-9KOLKM4,desktop-9kolkm4,192.168.0.35,Backups,\MSSQL\BookingSystem.bak.....
 ```
 
 ---
