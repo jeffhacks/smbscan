@@ -52,31 +52,33 @@ def scan_single(targetHost, user, options):
         # if (smbClient is None):
         # 	smbClient = get_client(target, user, options, 139)
         if smbClient != None:
-            try:
-                fileTimeStamp = time.strftime("%Y%m%d-%H%M%S")
-                logfile = (
-                    options.logfile
-                    if options.logfile
-                    else "logs/smbscan-"
-                    + slugify(target.name)
-                    + "-"
-                    + fileTimeStamp
-                    + ".csv"
-                )
-                logFile = open(logfile, "a")
+            fileTimeStamp = time.strftime("%Y%m%d-%H%M%S")
+            logfileName = (
+                options.logDirectory
+                + "/smbscan-"
+                + slugify(target.name)
+                + "-"
+                + fileTimeStamp
+                + ".csv"
+            )
+            if scan_internals.is_valid_path(options.logDirectory, logfileName):
+                try:
+                    logfile = open(logfileName, "a")
 
-                logger.info(f"{target.ip} ({target.name}) Connected as {user.username}, Target OS: {smbClient.getServerOS()}")
+                    logger.info(f"{target.ip} ({target.name}) Connected as {user.username}, Target OS: {smbClient.getServerOS()}")
                 
-                target.shares = scan_internals.get_shares(smbClient)
+                    target.shares = scan_internals.get_shares(smbClient)
                 
-                if options.crawlShares:
-                    scan_internals.get_files(smbClient, target, options, logFile)
-                user.results.append(target)
-            except Exception as e:
-                logger.exception("General failure: " + str(e))
-                #print(traceback.format_exc())
-            finally:
-                smbClient.close()
-                logFile.close()
+                    if options.crawlShares:
+                        scan_internals.get_files(smbClient, target, options, logfile)
+                    user.results.append(target)
+                except Exception as e:
+                    logger.exception("General failure: " + str(e))
+                    #print(traceback.format_exc())
+                finally:
+                    smbClient.close()
+                    logfile.close()
+            else:
+                logger.warning('Dangerous hostname: ' + target.name)
         if options.jitterTarget > 0:
             time.sleep(random.randint(0, options.jitterTarget))

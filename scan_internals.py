@@ -104,17 +104,22 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
                 
                 # Download file
                 if options.downloadFiles and not f.is_directory():
-                    downloadPath = os.path.join('logs', target.name, share.shareName, sharePath.lstrip('\\').replace('\\', os.path.sep))
-                    os.makedirs(downloadPath, exist_ok=True)
-
+                    filepath = sharePath.lstrip('\\').replace('\\', os.path.sep)
+                    downloadPath = os.path.join(options.logDirectory, 
+                                                    target.name, 
+                                                    share.shareName, 
+                                                    filepath)
                     downloadFile = os.path.join(downloadPath, f.get_longname())
-
-                    fh = open(downloadFile,'wb')
-                    smbClient.getFile(share.shareName, sharedFile.fullPath, fh.write)
-                    fh.close()
-
-                    # logger.critical(f"\tSaved to:\t{downloadFile}")
-
+                    
+                    if is_valid_path(options.logDirectory, downloadPath) and is_valid_path(options.logDirectory, downloadFile):
+                        os.makedirs(downloadPath, exist_ok=True)
+                        logger.debug(f'Downloading {os.path.realpath(downloadFile)}')
+                        fh = open(downloadFile,'wb')
+                        smbClient.getFile(share.shareName, sharedFile.fullPath, fh.write)
+                        fh.close()
+                    else:
+                        logger.warning(f'Dangerous path encountered: {downloadFile}.')
+                        
             create_log_entry(
                 options,
                 smbClient.getCredentials()[0],
@@ -164,3 +169,7 @@ def get_files(smbClient, target, options, logFile):
         else:
             logger.info(f"{target.ip} ({target.name}) Scanning \\\\{target.name}\\%1s" % (share.shareName))
             list_files(target, smbClient, share, "", options, logFile, 1)
+
+def is_valid_path(log_dir, path):
+    real_path = os.path.realpath(path)
+    return real_path.startswith(log_dir)
