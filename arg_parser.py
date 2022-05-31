@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 
 import setup
 
@@ -8,7 +9,7 @@ class Options:
     def __init__(
         self,
         hostname          = "SMBScan",
-        logfile           = "log",
+        logDirectory      = os.path.join(os.getcwd(), "logs"),
         kerberos          = False,
         port              = 139,
         timeout           = 2,
@@ -27,7 +28,7 @@ class Options:
         logLevel          = logging.INFO
     ):
         self.hostname          = hostname
-        self.logfile           = logfile
+        self.logDirectory      = logDirectory
         self.kerberos          = kerberos
         self.port              = port
         self.timeout           = timeout
@@ -98,7 +99,9 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         action="store_true"
     )
     parser.add_argument(
-        "--logfile", help="Override log file name (without extension)"
+        "--log-directory",
+        help="Override log file directory",
+        default=os.path.join(os.getcwd(), "logs")
     )
     parser.add_argument(
         "--include-shares",
