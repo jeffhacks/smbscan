@@ -61,7 +61,7 @@ def scan_single(targetHost, user, options):
                 + fileTimeStamp
                 + ".csv"
             )
-            if scan_internals.is_valid_path(options.logDirectory, logfileName):
+            if scan_internals.is_valid_filepath(options.logDirectory, logfileName):
                 try:
                     logfile = open(logfileName, "a")
 
@@ -78,7 +78,6 @@ def scan_single(targetHost, user, options):
                 finally:
                     smbClient.close()
                     logfile.close()
-            else:
-                logger.warning('Dangerous hostname: ' + target.name)
+
         if options.jitterTarget > 0:
             time.sleep(random.randint(0, options.jitterTarget))

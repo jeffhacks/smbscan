@@ -1,4 +1,5 @@
 import logging
+import ntpath
 import os
 import random
 import re
@@ -31,7 +32,7 @@ def get_shares(smbClient):
     resp = smbClient.listShares()
     for i in range(len(resp)):
         shareName = resp[i]["shi1_netname"][:-1]
-        if shareName not in ["NETLOGON", "SYSVOL", "IPC$", "print$"]:
+        if is_valid_share_name(shareName) and shareName not in ["NETLOGON", "SYSVOL", "IPC$", "print$"]:
             shares.append(Share(shareName))
     return shares
 
@@ -86,9 +87,13 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
             if f.get_longname() == "." or f.get_longname() == "..":
                 continue
 
+            file = (sharePath + "\\" + f.get_longname()).strip()
+            if not is_valid_remotepath(file):
+                continue
+
             sharedFile = SharedFile(
                 fileName    = f.get_longname(),
-                fullPath    = (sharePath + "\\" + f.get_longname()).strip(),
+                fullPath    = file,
                 isDirectory = f.is_directory(),
                 cTime       = time.ctime(float(f.get_ctime_epoch())),
                 mTime       = time.ctime(float(f.get_mtime_epoch())),
@@ -111,14 +116,12 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
                                                     filepath)
                     downloadFile = os.path.join(downloadPath, f.get_longname())
                     
-                    if is_valid_path(options.logDirectory, downloadPath) and is_valid_path(options.logDirectory, downloadFile):
+                    if is_valid_filepath(options.logDirectory, downloadPath) and is_valid_filepath(options.logDirectory, downloadFile):
                         os.makedirs(downloadPath, exist_ok=True)
                         logger.debug(f'Downloading {os.path.realpath(downloadFile)}')
                         fh = open(downloadFile,'wb')
                         smbClient.getFile(share.shareName, sharedFile.fullPath, fh.write)
                         fh.close()
-                    else:
-                        logger.warning(f'Dangerous path encountered: {downloadFile}.')
                         
             create_log_entry(
                 options,
@@ -170,6 +173,26 @@ def get_files(smbClient, target, options, logFile):
             logger.info(f"{target.ip} ({target.name}) Scanning \\\\{target.name}\\%1s" % (share.shareName))
             list_files(target, smbClient, share, "", options, logFile, 1)
 
-def is_valid_path(logDir, path):
+def is_valid_share_name(share_name):
+    # Invalid characters: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/dc9978d7-6299-4c5a-a22d-a039cdc716ea
+    if any(e in share_name.casefold() for e in ['"','\\','/','[',']',':','|','<','>','+','=',';',',','*','?']):
+        logger.warning(f'Invalid share name: {share_name}')
+        return False
+    else:
+        return True
+
+def is_valid_remotepath(path):
+    normpath = ntpath.normpath(path)
+    if path != normpath:
+        logger.warning(f'Invalid remotepath: {path}')
+        return False
+    else:
+        return True
+
+def is_valid_filepath(logDir, path):
     realPath = os.path.realpath(path)
-    return realPath.startswith(logDir)
+    if realPath.startswith(logDir):
+        return True
+    else:
+        logger.warning(f'Invalid filepath: {path}')
+        return False
