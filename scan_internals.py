@@ -170,6 +170,6 @@ def get_files(smbClient, target, options, logFile):
             logger.info(f"{target.ip} ({target.name}) Scanning \\\\{target.name}\\%1s" % (share.shareName))
             list_files(target, smbClient, share, "", options, logFile, 1)
 
-def is_valid_path(log_dir, path):
-    real_path = os.path.realpath(path)
-    return real_path.startswith(log_dir)
+def is_valid_path(logDir, path):
+    realPath = os.path.realpath(path)
+    return realPath.startswith(logDir)
