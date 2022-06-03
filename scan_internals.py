@@ -16,6 +16,18 @@ class Share:
         self.sharedFiles = []
 
 class SharedFile:
+    """Information about the shared file or directory.
+
+    Attributes:
+        fileName: A string of the name of the shared file.
+        fullPath: A string of the full path of the shared file.
+        isDirectory: A boolean indicating if shared file is a directory.
+        cTime: A string representing last status change of shared file in local time.
+        mTime: A string representing last modification of shared file in local time.
+        aTime: A string representing last access time of shared file in local time.
+        fileSize: A string of the file size represented in bytes.
+    """
+    
     def __init__(self, fileName, fullPath, isDirectory, cTime, mTime, aTime, fileSize):
         self.fileName    = fileName
         self.fullPath    = fullPath
