@@ -1,3 +1,4 @@
+import os
 import pytest
 from unittest.mock import patch
 
@@ -6,6 +7,21 @@ import impacket
 import arg_parser
 import scan
 import scan_internals
+
+class TestIsValidPath:
+  logDirectory = os.path.join(os.getcwd())
+
+  def assert_is_valid_path(self, path, expectedResult):
+    assert(scan_internals.is_valid_path(self.logDirectory, path) == expectedResult)
+
+  def test_normal_path(self):
+    self.assert_is_valid_path('normal', True)
+  
+  def test_bad_path(self):
+    self.assert_is_valid_path('/bad', False)
+
+  def test_traversal_path(self):
+    self.assert_is_valid_path('..', False)
 
 def test_get_shares(test_client):
   shares = scan_internals.get_shares(test_client)
