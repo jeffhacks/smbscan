@@ -1,8 +1,11 @@
+from dataclasses import dataclass
 import logging
 import os
 import random
 import re
+import string
 import time
+from xmlrpc.client import boolean
 
 from impacket.smbconnection import SMBConnection, SessionError
 
@@ -15,18 +18,26 @@ class Share:
         self.shareName   = shareName
         self.sharedFiles = []
 
+@dataclass
 class SharedFile:
     """Information about the shared file or directory.
 
     Attributes:
-        fileName: A string of the name of the shared file.
-        fullPath: A string of the full path of the shared file.
-        isDirectory: A boolean indicating if shared file is a directory.
-        cTime: A string representing last status change of shared file in local time.
-        mTime: A string representing last modification of shared file in local time.
-        aTime: A string representing last access time of shared file in local time.
-        fileSize: A string of the file size represented in bytes.
+        fileName: Name of the shared file.
+        fullPath: Full path of the shared file.
+        isDirectory: Indicate if shared file is a directory.
+        cTime: Last status change of shared file in local time.
+        mTime: Last modification of shared file in local time.
+        aTime: Last access time of shared file in local time.
+        fileSize: File size represented in bytes.
     """
+    fileName: string
+    fullPath: string
+    isDirectory: bool
+    cTime: string
+    mTime: string
+    aTime: string
+    fileSize: string
     
     def __init__(self, fileName, fullPath, isDirectory, cTime, mTime, aTime, fileSize):
         self.fileName    = fileName
