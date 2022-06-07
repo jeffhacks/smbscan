@@ -175,7 +175,7 @@ def get_files(smbClient, target, options, logFile):
 
 def is_valid_share_name(share_name):
     # Invalid characters: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/dc9978d7-6299-4c5a-a22d-a039cdc716ea
-    if any(e in share_name.casefold() for e in ['"','\\','/','[',']',':','|','<','>','+','=',';',',','*','?']):
+    if any(e in share_name for e in ['"','\\','/','[',']',':','|','<','>','+','=',';',',','*','?']):
         logger.warning(f'Invalid share name: {share_name}')
         return False
     else:

@@ -12,20 +12,33 @@ import scan_internals
 logger = logging.getLogger('smbscan')
 
 class Target:
-    def __init__(self, ip):
-        self.ip          = ip
-        self.name        = ""
+    def __init__(self, target):
+        self.ip          = None
+        self.name        = None
         self.alias       = ""
         self.addressList = ""
         self.shares      = []
-        # TODO this is probably where the DNS lookup occurs
+
         try:
-            self.name, self.alias, self.addressList = socket.gethostbyaddr(ip)
+            # Assume target is an IP
+            self.ip = str(ipaddress.ip_address(target))
+            hostname, self.alias, self.addressList = socket.gethostbyaddr(str(self.ip))
+            if is_valid_hostname(hostname):
+                self.name = hostname
+            else:
+                self.name = self.ip
         except socket.herror:
-            self.name = ip
+            # No DNS resolution
+            self.name = self.ip
+        except ValueError:
+            # Target is not an IP
+            try:
+                self.ip = socket.gethostbyname(target)
+                self.name = target
+            except socket.gaierror as e:
+                logger.error(f"Target failure ({target}): {str(e)}")
         except Exception as e:
-            logger.error(f"Target failure: {str(e)}")
-            #print(traceback.format_exc())
+            logger.error(f"Target failure ({target}): {str(e)}")
 
 class User:
     def __init__(self, username = "Guest", password = "", domain = "", lmhash = "", nthash = ""):
@@ -48,7 +61,9 @@ def scan_single(targetHost, user, options):
     else:
         target = Target(str(targetHost))
         # TODO This could potentially be noisier than needed. Consider only using port 445
-        smbClient = scan_internals.get_client(target, user, options, 445)
+        smbClient = None
+        if target.ip:
+            smbClient = scan_internals.get_client(target, user, options, 445)
         # if (smbClient is None):
         # 	smbClient = get_client(target, user, options, 139)
         if smbClient != None:
@@ -81,3 +96,11 @@ def scan_single(targetHost, user, options):
 
         if options.jitterTarget > 0:
             time.sleep(random.randint(0, options.jitterTarget))
+
+def is_valid_hostname(hostname):
+    # https://docs.microsoft.com/en-us/troubleshoot/windows-server/identity/naming-conventions-for-computer-domain-site-ou
+    if any(e in hostname for e in ['"','\\','/',':','*','?','"','<','>','|']):
+        logger.warning(f'Invalid hostname: {hostname}')
+        return False
+    else:
+        return True
