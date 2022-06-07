@@ -88,7 +88,7 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
                 continue
 
             file = (sharePath + "\\" + f.get_longname()).strip()
-            if not is_valid_remotepath(file):
+            if not is_safe_remotepath(file):
                 continue
 
             sharedFile = SharedFile(
@@ -116,7 +116,7 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
                                                     filepath)
                     downloadFile = os.path.join(downloadPath, f.get_longname())
                     
-                    if is_valid_filepath(options.logDirectory, downloadPath) and is_valid_filepath(options.logDirectory, downloadFile):
+                    if is_safe_filepath(options.logDirectory, downloadPath) and is_safe_filepath(options.logDirectory, downloadFile):
                         os.makedirs(downloadPath, exist_ok=True)
                         logger.debug(f'Downloading {os.path.realpath(downloadFile)}')
                         fh = open(downloadFile,'wb')
@@ -181,17 +181,17 @@ def is_valid_share_name(share_name):
     else:
         return True
 
-def is_valid_remotepath(path):
+def is_safe_remotepath(path):
     normpath = ntpath.normpath(path)
-    if path != normpath:
+    if ntpath.isabs(path) and path == normpath:
+        return True
+    else:
         logger.warning(f'Invalid remotepath: {path}')
         return False
-    else:
-        return True
 
-def is_valid_filepath(logDir, path):
+def is_safe_filepath(logDir, path):
     realPath = os.path.realpath(path)
-    if realPath.startswith(logDir):
+    if os.path.commonpath((realPath, logDir)) == logDir:
         return True
     else:
         logger.warning(f'Invalid filepath: {path}')

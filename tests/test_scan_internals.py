@@ -11,17 +11,17 @@ import scan_internals
 class TestIsValidPath:
   logDirectory = os.path.join(os.getcwd())
 
-  def assert_is_valid_filepath(self, path, expectedResult):
-    assert(scan_internals.is_valid_filepath(self.logDirectory, path) == expectedResult)
+  def assert_is_safe_filepath(self, path, expectedResult):
+    assert(scan_internals.is_safe_filepath(self.logDirectory, path) == expectedResult)
 
   def test_normal_path(self):
-    self.assert_is_valid_filepath('normal', True)
+    self.assert_is_safe_filepath('normal', True)
   
   def test_bad_path(self):
-    self.assert_is_valid_filepath('/bad', False)
+    self.assert_is_safe_filepath('/bad', False)
 
   def test_traversal_path(self):
-    self.assert_is_valid_filepath('..', False)
+    self.assert_is_safe_filepath('..', False)
 
 
 class TestIsValidShareName:
@@ -35,15 +35,16 @@ class TestIsValidShareName:
     self.assert_is_valid_share_name('tmp\\..\\tmp', False)
 
 
-class TestIsValidRemotePath:
-  def assert_is_valid_remotepath(self, path, expectedResult):
-    assert(scan_internals.is_valid_remotepath(path) == expectedResult)
+class TestIsSafeRemotePath:
+  def assert_is_safe_remotepath(self, path, expectedResult):
+    assert(scan_internals.is_safe_remotepath(path) == expectedResult)
 
   def test_normal_path(self):
-    self.assert_is_valid_remotepath('\\tmp', True)
+    self.assert_is_safe_remotepath('\\tmp', True)
   
-  def test_bad_path(self):
-    self.assert_is_valid_remotepath('\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp', False)
+  def test_bad_paths(self):
+    self.assert_is_safe_remotepath('\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp', False)
+    self.assert_is_safe_remotepath('..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp', False)
 
 
 def test_get_shares(test_client):

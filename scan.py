@@ -61,7 +61,7 @@ def scan_single(targetHost, user, options):
                 + fileTimeStamp
                 + ".csv"
             )
-            if scan_internals.is_valid_filepath(options.logDirectory, logfileName):
+            if scan_internals.is_safe_filepath(options.logDirectory, logfileName):
                 try:
                     logfile = open(logfileName, "a")
 
