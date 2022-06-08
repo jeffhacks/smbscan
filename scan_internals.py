@@ -74,10 +74,10 @@ def get_client(target, user, options, port):
             # logger.info(f"Connection failure: {str(e)}")
             # Host is not live - do not log this
         elif "Connection refused" in str(e) or "Permission denied" in str(e):
-            logger.info(f"{target.ip} ({target.name}) Connection failure: {str(e)}")
+            logger.debug(f"{target.ip} ({target.name}) Connection failure: {str(e)}")
             # Host is live
         else:
-            logger.info(f"{target.ip} ({target.name}) Connection failure: ({user.username}, {str(port)}) {str(e)}")
+            logger.debug(f"{target.ip} ({target.name}) Connection failure: ({user.username}, {str(port)}) {str(e)}")
             # Host is live
         return None
 
