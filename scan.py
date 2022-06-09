@@ -99,7 +99,7 @@ def scan_single(targetHost, user, options):
 
 def is_valid_hostname(hostname):
     # https://docs.microsoft.com/en-us/troubleshoot/windows-server/identity/naming-conventions-for-computer-domain-site-ou
-    if any(e in hostname for e in ['"','\\','/',':','*','?','"','<','>','|']):
+    if any(e in hostname for e in ['\\','/',':','*','?','"','<','>','|']):
         logger.warning(f'Invalid hostname: {hostname}')
         return False
     else:
