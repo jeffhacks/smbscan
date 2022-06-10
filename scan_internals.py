@@ -173,12 +173,12 @@ def get_files(smbClient, target, options, logFile):
             logger.info(f"{target.ip} ({target.name}) Scanning \\\\{target.name}\\%1s" % (share.shareName))
             list_files(target, smbClient, share, "", options, logFile, 1)
 
-def is_valid_share_name(share_name):
+def is_valid_share_name(shareName):
     """"Returns True if share name does not contain illegal characters, as described in Microsoft Docs."""
     # Illegal share name characters: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/dc9978d7-6299-4c5a-a22d-a039cdc716ea
-    illegal_chars = ['"','\\','/','[',']',':','|','<','>','+','=',';',',','*','?'] 
-    if any(char in share_name for char in illegal_chars):
-        logger.warning(f'Invalid share name: {share_name}, contains illegal characters')
+    illegalChars = ['"','\\','/','[',']',':','|','<','>','+','=',';',',','*','?'] 
+    if any(char in shareName for char in illegalChars):
+        logger.warning(f'Invalid share name: {shareName}, contains illegal characters')
         return False
     else:
         return True
