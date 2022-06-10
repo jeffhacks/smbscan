@@ -174,26 +174,29 @@ def get_files(smbClient, target, options, logFile):
             list_files(target, smbClient, share, "", options, logFile, 1)
 
 def is_valid_share_name(share_name):
-    # Invalid characters: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/dc9978d7-6299-4c5a-a22d-a039cdc716ea
+    """"Returns True if share name does not contain illegal characters, as described in Microsoft Docs."""
+    # Illegal share name characters: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/dc9978d7-6299-4c5a-a22d-a039cdc716ea
     illegal_chars = ['"','\\','/','[',']',':','|','<','>','+','=',';',',','*','?'] 
     if any(char in share_name for char in illegal_chars):
-        logger.warning(f'Invalid share name: {share_name}')
+        logger.warning(f'Invalid share name: {share_name}, contains illegal characters')
         return False
     else:
         return True
 
 def is_safe_remotepath(path):
-    normpath = ntpath.normpath(path)
+    """Returns true if remote path is in UNC naming convention."""
+    normpath = ntpath.normpath(path) # Force UNC naming convention by using ntpath
     if ntpath.isabs(path) and path == normpath:
         return True
     else:
-        logger.warning(f'Invalid remotepath: {path}')
+        logger.warning(f'Unsafe remotepath: {path}')
         return False
 
 def is_safe_filepath(logDir, path):
-    realPath = os.path.realpath(path)
-    if os.path.commonpath((realPath, logDir)) == logDir:
+    """Returns true if file path is pointing to a subdirectory of log directory."""
+    realpath = os.path.realpath(path)
+    if os.path.commonpath((realpath, logDir)) == logDir:
         return True
     else:
-        logger.warning(f'Invalid filepath: {path}')
+        logger.warning(f'Unsafe filepath: {path}. Received {realpath}, which has no common path with {logDir}')
         return False
