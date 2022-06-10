@@ -98,9 +98,11 @@ def scan_single(targetHost, user, options):
             time.sleep(random.randint(0, options.jitterTarget))
 
 def is_valid_hostname(hostname):
+    """"Returns True if host name does not contain illegal characters, as described in Microsoft Docs."""
     # https://docs.microsoft.com/en-us/troubleshoot/windows-server/identity/naming-conventions-for-computer-domain-site-ou
-    if any(e in hostname for e in ['\\','/',':','*','?','"','<','>','|']):
-        logger.warning(f'Invalid hostname: {hostname}')
+    illegalCharacters = ['\\','/',':','*','?','"','<','>','|']
+    if any(char in hostname for char in illegalCharacters):
+        logger.warning(f'Invalid hostname: {hostname}, contains illegal characters')
         return False
     else:
         return True
