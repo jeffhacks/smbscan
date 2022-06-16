@@ -1,4 +1,3 @@
-import os
 import pytest
 from unittest.mock import patch
 
@@ -9,13 +8,17 @@ import scan
 import scan_internals
 
 class TestIsValidPath:
-  logDirectory = os.path.join(os.getcwd())
+  TEST_CWD = '/Users/path' # Test Current Working Directory for patch
 
-  def assert_is_safe_filepath(self, path, expectedResult):
+  logDirectory = TEST_CWD + '/logs'
+
+  @patch('os.getcwd', return_value=TEST_CWD)
+  def assert_is_safe_filepath(self, path, expectedResult, mock_os_cwd):
     assert(scan_internals.is_safe_filepath(self.logDirectory, path) == expectedResult)
 
   def test_normal_path(self):
-    self.assert_is_safe_filepath('normal', True)
+    path = self.logDirectory + '/normal'
+    self.assert_is_safe_filepath(path, True)
   
   def test_bad_path(self):
     self.assert_is_safe_filepath('/bad', False)
@@ -55,8 +58,8 @@ def test_get_shares(test_client):
   assert(shares[1].shareName == "TestShare")
 
 def test_get_client(test_target, test_user, test_options):
-  with patch.object(impacket.smbconnection.SMBConnection, '__init__', mock_connection_init):
-    with patch.object(impacket.smbconnection.SMBConnection, 'login', mock_login):
+  with patch.object(impacket.smbconnection.SMBConnection, "__init__", mock_connection_init):
+    with patch.object(impacket.smbconnection.SMBConnection, "login", mock_login):
       port = 445
       client = scan_internals.get_client(test_target, test_user, test_options, port)
       
