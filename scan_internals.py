@@ -195,7 +195,8 @@ def is_safe_remotepath(path):
 def is_safe_filepath(logDir, path):
     """Returns true if file path is pointing to a subdirectory of log directory."""
     realpath = os.path.realpath(path)
-    if os.path.commonpath((realpath, logDir)) == logDir:
+    commonPath = os.path.commonpath((realpath, logDir))
+    if commonPath == logDir:
         return True
     else:
         logger.warning(f'Unsafe filepath: {path}. Received {realpath}, which has no common path with {logDir}')
