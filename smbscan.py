@@ -26,7 +26,6 @@ def valid_ip(addr):
 
 def main():
     args = setup_command_line_args()
-    os.makedirs("logs", exist_ok=True)
 
     # Refactor Options - config file?
     options = Options()
@@ -34,9 +33,10 @@ def main():
     options.jitterTarget      = args.jitter if args.jitter_target is None else args.jitter_target
     options.jitterOperation   = args.jitter if args.jitter_operation is None else args.jitter_operation
     options.timeout           = args.timeout
-    options.logfile           = args.logfile
-    options.csvFile           = (
-        "logs/smbscan-" + time.strftime("%Y%m%d-%H%M%S") + ".log"
+    options.logDirectory      = os.path.abspath(args.log_directory)
+    os.makedirs(args.log_directory, exist_ok=True)
+    options.csvFile = os.path.join(
+        options.logDirectory, "smbscan-" + time.strftime("%Y%m%d-%H%M%S") + ".log"
     )
     options.crawlShares       = not args.shares_only
     options.maxDepth          = args.max_depth

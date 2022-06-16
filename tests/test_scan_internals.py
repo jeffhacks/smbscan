@@ -7,6 +7,49 @@ import arg_parser
 import scan
 import scan_internals
 
+class TestIsValidPath:
+  TEST_CWD = '/Users/path' # Test Current Working Directory for patch
+
+  logDirectory = TEST_CWD + '/logs'
+
+  @patch('os.getcwd', return_value=TEST_CWD)
+  def assert_is_safe_filepath(self, path, expectedResult, mock_os_cwd):
+    assert(scan_internals.is_safe_filepath(self.logDirectory, path) == expectedResult)
+
+  def test_normal_path(self):
+    path = self.logDirectory + '/normal'
+    self.assert_is_safe_filepath(path, True)
+  
+  def test_bad_path(self):
+    self.assert_is_safe_filepath('/bad', False)
+
+  def test_traversal_path(self):
+    self.assert_is_safe_filepath('..', False)
+
+
+class TestIsValidShareName:
+  def assert_is_valid_share_name(self, share_name, expectedResult):
+    assert(scan_internals.is_valid_share_name(share_name) == expectedResult)
+
+  def test_normal_path(self):
+    self.assert_is_valid_share_name('tmp', True)
+  
+  def test_bad_path(self):
+    self.assert_is_valid_share_name('tmp\\..\\tmp', False)
+
+
+class TestIsSafeRemotePath:
+  def assert_is_safe_remotepath(self, path, expectedResult):
+    assert(scan_internals.is_safe_remotepath(path) == expectedResult)
+
+  def test_normal_path(self):
+    self.assert_is_safe_remotepath('\\tmp', True)
+  
+  def test_bad_paths(self):
+    self.assert_is_safe_remotepath('\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp', False)
+    self.assert_is_safe_remotepath('..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp', False)
+
+
 def test_get_shares(test_client):
   shares = scan_internals.get_shares(test_client)
   

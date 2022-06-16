@@ -152,4 +152,5 @@ tester,DESKTOP-9KOLKM4,desktop-9kolkm4,192.168.0.35,Backups,\MSSQL\BookingSystem
 ---
 ## Acknowledgments
 * Wireghoul - https://github.com/wireghoul
+* Justin Steven - https://github.com/justinsteven
 * Impacket - https://github.com/SecureAuthCorp/impacket
