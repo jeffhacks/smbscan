@@ -58,8 +58,8 @@ def test_get_shares(test_client):
   assert(shares[1].shareName == "TestShare")
 
 def test_get_client(test_target, test_user, test_options):
-  with patch.object(impacket.smbconnection.SMBConnection, "__init__", mock_connection_init):
-    with patch.object(impacket.smbconnection.SMBConnection, "login", mock_login):
+  with patch.object(impacket.smbconnection.SMBConnection, '__init__', mock_connection_init):
+    with patch.object(impacket.smbconnection.SMBConnection, 'login', mock_login):
       port = 445
       client = scan_internals.get_client(test_target, test_user, test_options, port)
       
