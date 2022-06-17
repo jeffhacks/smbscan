@@ -3,9 +3,9 @@ from unittest.mock import patch
 
 import impacket
 
-import arg_parser
-import scan
-import scan_internals
+import smbscan.arg_parser as arg_parser
+import smbscan.scan as scan
+import smbscan.scan_internals as scan_internals
 
 class TestIsValidPath:
   TEST_CWD = '/Users/path' # Test Current Working Directory for patch
@@ -19,7 +19,7 @@ class TestIsValidPath:
   def test_normal_path(self):
     path = self.logDirectory + '/normal'
     self.assert_is_safe_filepath(path, True)
-  
+
   def test_bad_path(self):
     self.assert_is_safe_filepath('/bad', False)
 
@@ -33,7 +33,7 @@ class TestIsValidShareName:
 
   def test_normal_path(self):
     self.assert_is_valid_share_name('tmp', True)
-  
+
   def test_bad_path(self):
     self.assert_is_valid_share_name('tmp\\..\\tmp', False)
 
@@ -44,7 +44,7 @@ class TestIsSafeRemotePath:
 
   def test_normal_path(self):
     self.assert_is_safe_remotepath('\\tmp', True)
-  
+
   def test_bad_paths(self):
     self.assert_is_safe_remotepath('\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp', False)
     self.assert_is_safe_remotepath('..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp', False)
@@ -52,7 +52,7 @@ class TestIsSafeRemotePath:
 
 def test_get_shares(test_client):
   shares = scan_internals.get_shares(test_client)
-  
+
   assert(len(shares) == 2)
   assert(shares[0].shareName == "Admin")
   assert(shares[1].shareName == "TestShare")
@@ -62,11 +62,11 @@ def test_get_client(test_target, test_user, test_options):
     with patch.object(impacket.smbconnection.SMBConnection, 'login', mock_login):
       port = 445
       client = scan_internals.get_client(test_target, test_user, test_options, port)
-      
+
       assert(client != None)
       assert(client._remoteHost == test_target.ip)
 
-def mock_connection_init(self, remoteName='', remoteHost='', myName=None, sess_port=impacket.nmb.SMB_SESSION_PORT, 
+def mock_connection_init(self, remoteName='', remoteHost='', myName=None, sess_port=impacket.nmb.SMB_SESSION_PORT,
                          timeout=60, preferredDialect=None, existingConnection=None, manualNegotiate=False):
   """Mock SMBConnection constructor and return default values."""
   self._SMBConnection         = 0
@@ -109,6 +109,6 @@ def test_client():
       return [
         {"shi1_netname": "IPC$\\"},
         {"shi1_netname": "Admin\\"},
-        {"shi1_netname": "TestShare\\"} 
+        {"shi1_netname": "TestShare\\"}
       ]
   return TestClient()

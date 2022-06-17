@@ -1,2 +1,0 @@
-impacket
-python-slugify
