@@ -31,11 +31,11 @@ pip3 install -r requirements.txt
 ## Running scans
 Scan a single target as guest
 ```bash
-python smbscan.py 192.168.0.0/24
+python3 src/smbscan.py 192.168.0.0/24
 ```
 
 ```log
-[2022-05-21 22:14:17 INFO] ./smbscan.py 192.168.0.26
+[2022-05-21 22:14:17 INFO] src/smbscan.py 192.168.0.26
 [2022-05-22 20:45:36 INFO] Scanning 192.168.0.26
 [2022-05-21 22:14:17 INFO] 192.168.0.26 (TESTSERVER) Connected as tester, Target OS: eWeblrdS
 [2022-05-21 22:14:17 INFO] 192.168.0.26 (TESTSERVER) Scanning \\TESTSERVER\TESTER
@@ -47,11 +47,11 @@ python smbscan.py 192.168.0.0/24
 
 Scan a range of targets as a specific domain user with a random delay of 1-3 seconds between targets and operations on targets:
 ```bash
-python smbscan.py 192.168.0.0/24 -u tester -p Monkey123 ---download-files --max-depth 3 --exclude-hosts 192.168.0.18
+python3 src/smbscan.py 192.168.0.0/24 -u tester -p Monkey123 ---download-files --max-depth 3 --exclude-hosts 192.168.0.18
 ```
 
 ```log
-[2022-05-21 22:14:17 INFO] ./smbscan.py 192.168.0.0/24 -u tester -p Monkey123 ---download-files --max-depth 3 --exclude-hosts 192.168.0.18
+[2022-05-21 22:14:17 INFO] src/smbscan.py 192.168.0.0/24 -u tester -p Monkey123 ---download-files --max-depth 3 --exclude-hosts 192.168.0.18
 [2022-05-21 22:14:17 INFO] Scanning 192.168.0.0/24
 [2022-05-21 22:14:17 WARNING] Skipping 192.168.0.18 (on exclusion list)
 [2022-05-21 22:14:17 INFO] 192.168.0.26 (TESTSERVER) Connected as tester, Target OS: eWeblrdS
@@ -125,7 +125,7 @@ graudit -d secrets -x *.csv logs/
 
 ### View CSV Files
 ```bash
-cat smbscan-desktop-9kolm4-20220518-075257.csv | sed -e 's/,,/, ,/g' | column -s, -t | less -#5 -N -S
+cat logs/smbscan-desktop-9kolm4-20220518-075257.csv | sed -e 's/,,/, ,/g' | column -s, -t | less -#5 -N -S
 ```
 
 ```
