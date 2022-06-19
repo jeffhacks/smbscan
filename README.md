@@ -24,14 +24,14 @@ Clone or download from the git repo.
 
 ### Installation
 ```bash
-pip3 install -r requirements.txt
+pipenv install
 ```
 
 ---
 ## Running scans
 Scan a single target as guest
 ```bash
-python3 src/smbscan.py 192.168.0.0/24
+pipenv run src/smbscan.py 192.168.0.0/24
 ```
 
 ```log
@@ -47,7 +47,7 @@ python3 src/smbscan.py 192.168.0.0/24
 
 Scan a range of targets as a specific domain user with a random delay of 1-3 seconds between targets and operations on targets:
 ```bash
-python3 src/smbscan.py 192.168.0.0/24 -u tester -p Monkey123 ---download-files --max-depth 3 --exclude-hosts 192.168.0.18
+pipenv run 192.168.0.0/24 -u tester -p Monkey123 ---download-files --max-depth 3 --exclude-hosts 192.168.0.18
 ```
 
 ```log
