@@ -58,6 +58,10 @@ def scan_single(targetHost, user, options):
         logger.warning(
             "Skipping %1s (on exclusion list)" % (targetHost)
         )
+    if is_host_in_statefile(options.stateFile, str(targetHost)):
+        logger.warning(
+            "Skipping %1s (already scanned)" % (targetHost)
+        )
     else:
         target = Target(str(targetHost))
         # TODO This could potentially be noisier than needed. Consider only using port 445
@@ -94,6 +98,8 @@ def scan_single(targetHost, user, options):
                     smbClient.close()
                     logfile.close()
 
+        add_target_to_statefile(options.stateFile, str(targetHost))
+
         if options.jitterTarget > 0:
             time.sleep(random.randint(0, options.jitterTarget))
 
@@ -106,3 +112,17 @@ def is_valid_hostname(hostname):
         return False
     else:
         return True
+
+def add_target_to_statefile(statefileName, targetHost):
+    with open(statefileName, 'a+') as statefile:
+        statefile.write(f'{targetHost}\n')
+
+def is_host_in_statefile(statefileName, targetHost):
+    found = False
+    try:
+        with open(statefileName, "r") as statefile:
+            found = any(targetHost == host.strip() for host in statefile)
+    except FileNotFoundError as e:
+        pass
+    finally:
+        return found

@@ -38,6 +38,15 @@ def main():
     options.csvFile = os.path.join(
         options.logDirectory, "smbscan-" + time.strftime("%Y%m%d-%H%M%S") + ".log"
     )
+    if args.state_file == None:
+        options.stateFile = os.path.join(
+            options.logDirectory, "smbscan-" + time.strftime("%Y%m%d-%H%M%S") + ".state"
+        )
+    else:
+        filename, file_extension = os.path.splitext(args.state_file)
+        options.stateFile = os.path.join(
+            options.logDirectory, f'{args.state_file}.state'
+        )
     options.crawlShares       = not args.shares_only
     options.maxDepth          = args.max_depth
     options.patternsFile      = args.patterns_file
