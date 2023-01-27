@@ -1,3 +1,4 @@
+import csv
 import ipaddress
 import logging
 import socket
@@ -66,8 +67,11 @@ def scan_single(targetHost, user, options):
         target = Target(str(targetHost))
         # TODO This could potentially be noisier than needed. Consider only using port 445
         smbClient = None
+
         if target.ip:
             smbClient = scan_internals.get_client(target, user, options, 445)
+        else:
+            targetScanResult = 'Target failure'
         # if (smbClient is None):
         # 	smbClient = get_client(target, user, options, 139)
         if smbClient != None:
@@ -92,13 +96,15 @@ def scan_single(targetHost, user, options):
                         scan_internals.get_files(smbClient, target, options, logfile)
                     user.results.append(target)
                 except Exception as e:
-                    logger.exception("General failure: " + str(e))
+                    targetScanResult = 'Error'
+                    logger.exception(f'General failure ({targetHost}): {str(e)}')
                     #print(traceback.format_exc())
                 finally:
+                    targetScanResult = 'Completed'
                     smbClient.close()
                     logfile.close()
 
-        add_target_to_statefile(options.stateFile, str(targetHost))
+        add_target_to_statefile(options.stateFile, str(targetHost), targetScanResult)
 
         if options.jitterTarget > 0:
             time.sleep(random.randint(0, options.jitterTarget))
@@ -113,16 +119,26 @@ def is_valid_hostname(hostname):
     else:
         return True
 
-def add_target_to_statefile(statefileName, targetHost):
-    with open(statefileName, 'a+') as statefile:
-        statefile.write(f'{targetHost}\n')
+def add_target_to_statefile(statefileName, targetHost, targetScanResult):
+    row = [
+        targetHost,
+        time.strftime("%Y%m%d %H%M%S"),
+        targetScanResult
+    ]
+    with open(statefileName, 'a+', encoding='utf-8') as statefile:
+        writer = csv.writer(statefile)
+        writer.writerow(row)
+        #writer.close()
 
 def is_host_in_statefile(statefileName, targetHost):
     found = False
     try:
-        with open(statefileName, "r") as statefile:
-            found = any(targetHost == host.strip() for host in statefile)
-    except FileNotFoundError as e:
+        with open(statefileName, 'r', encoding='utf-8') as statefile:
+            reader = csv.reader(statefile, delimiter=',')
+            found = any(targetHost == row[0].strip() for row in reader)
+            #reader.close()
+
+    except Exception as e:
         pass
     finally:
         return found
