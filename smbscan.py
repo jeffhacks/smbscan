@@ -43,9 +43,12 @@ def main():
             options.logDirectory, "smbscan-" + time.strftime("%Y%m%d-%H%M%S") + ".state"
         )
     else:
-        filename, file_extension = os.path.splitext(args.state_file)
+        state_filename = args.state_file
+        filename, file_extension = os.path.splitext(state_filename)
+        if not file_extension == '.state':
+            state_filename = f'{state_filename}.state'
         options.stateFile = os.path.join(
-            options.logDirectory, f'{args.state_file}.state'
+            options.logDirectory, state_filename
         )
     options.crawlShares       = not args.shares_only
     options.maxDepth          = args.max_depth

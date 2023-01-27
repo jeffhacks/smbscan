@@ -67,6 +67,7 @@ def scan_single(targetHost, user, options):
         target = Target(str(targetHost))
         # TODO This could potentially be noisier than needed. Consider only using port 445
         smbClient = None
+        targetScanResult = ''
 
         if target.ip:
             smbClient = scan_internals.get_client(target, user, options, 445)
@@ -128,7 +129,6 @@ def add_target_to_statefile(statefileName, targetHost, targetScanResult):
     with open(statefileName, 'a+', encoding='utf-8') as statefile:
         writer = csv.writer(statefile)
         writer.writerow(row)
-        #writer.close()
 
 def is_host_in_statefile(statefileName, targetHost):
     found = False
@@ -136,7 +136,6 @@ def is_host_in_statefile(statefileName, targetHost):
         with open(statefileName, 'r', encoding='utf-8') as statefile:
             reader = csv.reader(statefile, delimiter=',')
             found = any(targetHost == row[0].strip() for row in reader)
-            #reader.close()
 
     except Exception as e:
         pass
