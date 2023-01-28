@@ -65,45 +65,48 @@ def scan_single(targetHost, user, options):
         )
     else:
         target = Target(str(targetHost))
-        # TODO This could potentially be noisier than needed. Consider only using port 445
         smbClient = None
         targetScanResult = ''
 
-        if target.ip:
-            smbClient = scan_internals.get_client(target, user, options, 445)
+        if not target.ip:
+            targetScanResult = 'Unresolvable host'
         else:
-            targetScanResult = 'Target failure'
+            smbClient = scan_internals.get_client(target, user, options, 445)
+            # TODO This could potentially be noisier than needed. Consider only using port 445
         # if (smbClient is None):
-        # 	smbClient = get_client(target, user, options, 139)
-        if smbClient != None:
-            fileTimeStamp = time.strftime("%Y%m%d-%H%M%S")
-            logfileName = (
-                options.logDirectory
-                + "/smbscan-"
-                + slugify(target.name)
-                + "-"
-                + fileTimeStamp
-                + ".csv"
-            )
-            if scan_internals.is_safe_filepath(options.logDirectory, logfileName):
-                try:
-                    logfile = open(logfileName, "a")
+            # 	smbClient = get_client(target, user, options, 139)
 
-                    logger.info(f"{target.ip} ({target.name}) Connected as {user.username}, Target OS: {smbClient.getServerOS()}")
-                
-                    target.shares = scan_internals.get_shares(smbClient)
-                
-                    if options.crawlShares:
-                        scan_internals.get_files(smbClient, target, options, logfile)
-                    user.results.append(target)
-                except Exception as e:
-                    targetScanResult = 'Error'
-                    logger.exception(f'General failure ({targetHost}): {str(e)}')
-                    #print(traceback.format_exc())
-                finally:
-                    targetScanResult = 'Completed'
-                    smbClient.close()
-                    logfile.close()
+            if smbClient is None:
+                targetScanResult = 'Unable to connect'
+            else:
+                fileTimeStamp = time.strftime("%Y%m%d-%H%M%S")
+                logfileName = (
+                    options.logDirectory
+                    + "/smbscan-"
+                    + slugify(target.name)
+                    + "-"
+                    + fileTimeStamp
+                    + ".csv"
+                )
+                if scan_internals.is_safe_filepath(options.logDirectory, logfileName):
+                    try:
+                        logfile = open(logfileName, "a")
+
+                        logger.info(f"{target.ip} ({target.name}) Connected as {user.username}, Target OS: {smbClient.getServerOS()}")
+                    
+                        target.shares = scan_internals.get_shares(smbClient)
+                    
+                        if options.crawlShares:
+                            scan_internals.get_files(smbClient, target, options, logfile)
+                        user.results.append(target)
+                    except Exception as e:
+                        targetScanResult = 'Error'
+                        logger.exception(f'General failure ({targetHost}): {str(e)}')
+                        #print(traceback.format_exc())
+                    finally:
+                        targetScanResult = 'Scan completed'
+                        smbClient.close()
+                        logfile.close()
 
         add_target_to_statefile(options.stateFile, str(targetHost), targetScanResult)
 
