@@ -16,6 +16,7 @@ class Options:
         jitter            = 3,
         jitterTarget      = 3,
         jitterOperation   = 3,
+        threads           = 1,
         aesKey            = "",
         dc_ip             = "",
         csvFile           = [],
@@ -33,6 +34,7 @@ class Options:
         self.kerberos          = kerberos
         self.port              = port
         self.timeout           = timeout
+        self.threads           = threads
         self.jitter            = jitter
         self.jitterTarget      = jitterTarget
         self.jitterOperation   = jitterOperation
@@ -94,6 +96,12 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         help="Set timeout for connections. Default 2 seconds.",
         type=int,
         default=2,
+    )
+    parser.add_argument(
+        "--threads",
+        help="Set number of threads. Default 1 thread.",
+        type=int,
+        default=1,
     )
     parser.add_argument(
         "--shares-only",
