@@ -69,7 +69,7 @@ def scan_single(targetHost, user, options):
         targetScanResult = ''
 
         if not target.ip:
-            targetScanResult = 'Unresolvable host'
+            targetScanResult = 'Unable to resolve'
         else:
             smbClient = scan_internals.get_client(target, user, options, 445)
             # TODO This could potentially be noisier than needed. Consider only using port 445
