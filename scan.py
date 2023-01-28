@@ -50,10 +50,6 @@ class User:
         self.nthash   = nthash
         self.results  = []
 
-def scan_range(targetIPRange, user, options):
-    for targetIP in ipaddress.IPv4Network(str(targetIPRange)):
-        scan_single(targetIP, user, options)
-
 def scan_single(targetHost, user, options):
     if str(targetHost) in options.excludeHosts:
         logger.warning(
@@ -64,6 +60,7 @@ def scan_single(targetHost, user, options):
             "Skipping %1s (already scanned)" % (targetHost)
         )
     else:
+        logger.info(f'Scanning {targetHost}')
         target = Target(str(targetHost))
         smbClient = None
         targetScanResult = ''
