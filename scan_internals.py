@@ -32,7 +32,7 @@ def get_shares(smbClient):
     resp = smbClient.listShares()
     for i in range(len(resp)):
         shareName = resp[i]["shi1_netname"][:-1]
-        if is_valid_share_name(shareName) and shareName not in ["NETLOGON", "SYSVOL", "IPC$", "print$"]:
+        if is_valid_share_name(shareName) and shareName not in ["IPC$", "print$"]:
             shares.append(Share(shareName))
     return shares
 
