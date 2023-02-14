@@ -17,6 +17,8 @@ from arg_parser import setup_command_line_args, Options
 from scan import scan_single, User
 
 from multiprocessing.pool import Pool
+from multiprocessing.pool import ThreadPool
+from multiprocessing import set_start_method
 from threading import Thread
 
 def valid_ip(addr):
@@ -78,7 +80,7 @@ def main():
 
     logger = logging.getLogger('smbscan')
     logger.setLevel(options.logLevel)
-    formatter = logging.Formatter("[%(asctime)s %(levelname)s] %(message)s",
+    formatter = logging.Formatter("[%(asctime)s %(threadName)s %(levelname)s] %(message)s",
                                 "%Y-%m-%d %H:%M:%S")
 
     logFileHandler = handlers.RotatingFileHandler(options.csvFile,
@@ -116,9 +118,12 @@ def main():
                     target_list.append((str(target), user, options))
                 target = file.readline().strip()
 
-    with Pool(processes=options.threads) as p:
-        p.starmap(scan_single, target_list)
-
+    logger.info(f'Scanning with {options.threads} threads')
+    set_start_method("spawn")
+    with ThreadPool(processes=options.threads) as pool:
+        result = pool.starmap_async(scan_single, target_list, chunksize=1)
+        result.wait()
+        
     logger.info("Scan completed")
 
 
