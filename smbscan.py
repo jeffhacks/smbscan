@@ -61,6 +61,10 @@ def main():
     options.downloadFiles     = args.download_files
     options.logLevel          = logging.DEBUG if args.debug else logging.INFO
     
+    if str(args.include_paths) != "None":
+        options.includePaths = str(args.include_paths).split(",")
+    if str(args.exclude_paths) != "None":
+        options.excludePaths = str(args.exclude_paths).split(",")
     if str(args.include_shares) != "None":
         options.includeShares = str(args.include_shares).split(",")
     if str(args.exclude_shares) != "None":
