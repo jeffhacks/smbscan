@@ -19,6 +19,7 @@ class Options:
         aesKey            = "",
         dc_ip             = "",
         csvFile           = [],
+        stateFile         = "",
         includeShares     = [],
         excludeShares     = [],
         excludeHosts      = [],
@@ -38,6 +39,7 @@ class Options:
         self.aesKey            = aesKey
         self.dc_ip             = dc_ip
         self.csvFile           = csvFile
+        self.stateFile         = stateFile
         self.includeShares     = includeShares
         self.excludeShares     = excludeShares
         self.excludeHosts      = excludeHosts
@@ -136,6 +138,10 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         "--debug",
         help="Include debug messages in terminal output.",
         action="store_true"
+    )
+    parser.add_argument(
+        "--state-file",
+        help="State file for tracking complete targets and skipping these on subsequent scans.",
     )
 
     return parser.parse_args()
