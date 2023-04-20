@@ -14,8 +14,12 @@ from slugify import slugify
 from logging import handlers #import logging.handlers as handlers
 
 from arg_parser import setup_command_line_args, Options
-from scan import scan_range, scan_single, User
+from scan import scan_single, User
 
+from multiprocessing.pool import Pool
+from multiprocessing.pool import ThreadPool
+from multiprocessing import set_start_method
+from threading import Thread
 
 def valid_ip(addr):
     try:
@@ -33,6 +37,7 @@ def main():
     options.jitterTarget      = args.jitter if args.jitter_target is None else args.jitter_target
     options.jitterOperation   = args.jitter if args.jitter_operation is None else args.jitter_operation
     options.timeout           = args.timeout
+    options.threads           = args.threads
     options.logDirectory      = os.path.abspath(args.log_directory)
     os.makedirs(args.log_directory, exist_ok=True)
     options.csvFile = os.path.join(
@@ -75,7 +80,7 @@ def main():
 
     logger = logging.getLogger('smbscan')
     logger.setLevel(options.logLevel)
-    formatter = logging.Formatter("[%(asctime)s %(levelname)s] %(message)s",
+    formatter = logging.Formatter("[%(asctime)s %(threadName)s %(levelname)s] %(message)s",
                                 "%Y-%m-%d %H:%M:%S")
 
     logFileHandler = handlers.RotatingFileHandler(options.csvFile,
@@ -93,23 +98,32 @@ def main():
     # Record arguments
     logger.info(' '.join(sys.argv[0:]))
 
+    # Load targets into list
+    target_list = []
     if args.target:
         logger.info(f"Scanning {args.target}")
         if valid_ip(args.target):
-            scan_range(args.target, user, options)
+            for targetIP in ipaddress.IPv4Network(str(args.target)):
+                target_list.append((targetIP, user, options))
         else:
-            scan_single(args.target, user, options)
+            target_list.append((str(args.target), user, options))
     else:
         with args.file as file:
             target = file.readline().strip()
             while target:
-                logger.info(f"Scanning {target}")
                 if valid_ip(target):
-                    scan_range(target, user, options)
+                    for targetIP in ipaddress.IPv4Network(str(target)):
+                        target_list.append((targetIP, user, options))
                 else:
-                    scan_single(target, user, options)
+                    target_list.append((str(target), user, options))
                 target = file.readline().strip()
 
+    logger.info(f'Scanning with {options.threads} threads')
+    set_start_method("spawn")
+    with ThreadPool(processes=options.threads) as pool:
+        result = pool.starmap_async(scan_single, target_list, chunksize=1)
+        result.wait()
+        
     logger.info("Scan completed")
 
 
