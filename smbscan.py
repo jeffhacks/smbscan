@@ -75,7 +75,12 @@ def main():
     user = User()
     if args.user:
         user.username = args.user
-        user.password = args.password if args.password else getpass.getpass()
+        ntlmHash = args.hash
+        if ntlmHash:
+            user.lmhash = ntlmHash.split(':')[0]
+            user.nthash = ntlmHash.split(':')[1]
+        else:
+            user.password = args.password if args.password else getpass.getpass()
         user.domain   = args.domain if args.domain else ""
 
     logger = logging.getLogger('smbscan')

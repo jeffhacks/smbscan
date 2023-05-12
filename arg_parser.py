@@ -69,6 +69,9 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
     parser.add_argument(
         "-p", "--password", help="Password for user (will prompt if missing and needed)"
     )
+    parser.add_argument(
+        "-H", "--hash", help="NTLM Hash for user"
+    )
     parser.add_argument("-d", "--domain", help="Domain for user")
     parser.add_argument("-k", "--kerberos", help="Not implemented", action="store_true")
     parser.add_argument(
