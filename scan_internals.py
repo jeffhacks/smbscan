@@ -83,6 +83,24 @@ def get_client(target, user, options, port):
 
 def list_files(target, smbClient, share, sharePath, options, logFile, currentDepth):
     try:
+        if sharePath == '':
+            # Always allow listing the root of each share
+            logger.debug(f'Allowed [{sharePath}]')
+        elif any(sharePath.lower().startswith(x) for x in options.excludePaths):
+            # If there are any exclusions, make sure we skip these
+            logger.info(f'Skipping [{sharePath}] (Path is in exclude list)')
+            return
+        elif any(sharePath.lower().startswith(x) for x in options.includePaths):
+            # Always allow paths that are on the include list
+            logger.debug(f'Allowed [{sharePath}] (Path is in include list)')
+        elif len(options.includePaths) > 0:
+            # If there is an include list, and we have not had a match yet, exclude all others
+            logger.info(f'Skipping [{sharePath}] (Include list exists but does not contain this path)')
+            return
+        else:
+            # Path is not on the exclusion list and there is no inclusion list
+            logger.debug(f'Allowed [{sharePath}]')
+        
         for f in smbClient.listPath(share.shareName, sharePath + "\\*"):
             if f.get_longname() == "." or f.get_longname() == "..":
                 continue

@@ -21,6 +21,8 @@ class Options:
         dc_ip             = "",
         csvFile           = [],
         stateFile         = "",
+        includePaths      = [],
+        excludePaths      = [],
         includeShares     = [],
         excludeShares     = [],
         excludeHosts      = [],
@@ -42,6 +44,8 @@ class Options:
         self.dc_ip             = dc_ip
         self.csvFile           = csvFile
         self.stateFile         = stateFile
+        self.includePaths      = includePaths
+        self.excludePaths      = excludePaths
         self.includeShares     = includeShares
         self.excludeShares     = excludeShares
         self.excludeHosts      = excludeHosts
@@ -115,6 +119,14 @@ def setup_command_line_args(args = None) -> argparse.Namespace:
         "--log-directory",
         help="Override log file directory",
         default=os.path.join(os.getcwd(), "logs")
+    )
+    parser.add_argument(
+        "--include-paths",
+        help="List of comma separated paths to include in scan. All others will be excluded.",
+    )
+    parser.add_argument(
+        "--exclude-paths",
+        help="List of comma separated paths to exclude from scan. All others will be included.",
     )
     parser.add_argument(
         "--include-shares",
