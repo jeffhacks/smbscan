@@ -116,11 +116,31 @@ def main():
         with args.file as file:
             target = file.readline().strip()
             while target:
-                if valid_ip(target):
-                    for targetIP in ipaddress.IPv4Network(str(target)):
-                        target_list.append((targetIP, user, options))
+                if len(target.split(',')) == 3:
+                    hash_target = target.split(',')[0]
+                    hash_username = target.split(',')[1]
+                    hash_hash = target.split(',')[2]
+                    logger.debug(f'Hash Target: {hash_target}, User: {hash_username}, Hash: {hash_hash}')
+
+                    hash_user = User()
+                    hash_user.username = hash_username
+                    ntlmHash = hash_hash
+                    if ntlmHash:
+                        hash_user.lmhash = ntlmHash.split(':')[0]
+                        hash_user.nthash = ntlmHash.split(':')[1]
+
+                    if valid_ip(hash_target):
+                        for targetIP in ipaddress.IPv4Network(str(hash_target)):
+                            target_list.append((targetIP, hash_user, options))
+                    else:
+                        target_list.append((str(hash_target), hash_user, options))
                 else:
-                    target_list.append((str(target), user, options))
+                    logger.debug(f'Standard Target: {target}, User: {user.username}')
+                    if valid_ip(target):
+                        for targetIP in ipaddress.IPv4Network(str(target)):
+                            target_list.append((targetIP, user, options))
+                    else:
+                        target_list.append((str(target), user, options))
                 target = file.readline().strip()
 
     logger.info(f'Scanning with {options.threads} threads')
