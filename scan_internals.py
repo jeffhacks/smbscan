@@ -120,7 +120,7 @@ def list_files(target, smbClient, share, sharePath, options, logFile, currentDep
             )
             share.sharedFiles.append(sharedFile)
 
-            if any(regex.match(sharedFile.fileName) for regex in options.patterns):
+            if any(regex.match(sharedFile.fullPath) for regex in options.patterns):
                 logger.critical(
                     f"Suspicous file: \\\\{target.name}\\{share.shareName}{sharedFile.fullPath} ({time.ctime(float(f.get_atime_epoch()))}, {f.get_filesize()})"
                 )
