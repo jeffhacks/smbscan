@@ -83,9 +83,17 @@ def main():
         if ntlmHash:
             user.lmhash = ntlmHash.split(':')[0]
             user.nthash = ntlmHash.split(':')[1]
+        elif args.no_pass:
+            pass
         else:
             user.password = args.password if args.password else getpass.getpass()
-        user.domain   = args.domain if args.domain else ""
+        user.domain = args.domain if args.domain else ""
+
+    options.kerberos = args.kerberos
+    if args.kerberos:
+        user.domain = args.domain if args.domain else ""
+        options.dc_ip = args.dc_ip if args.dc_ip else ""
+        options.aesKey = args.aesKey if args.aesKey else ""
 
     logger = logging.getLogger('smbscan')
     logger.setLevel(options.logLevel)

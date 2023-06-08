@@ -39,9 +39,13 @@ def get_shares(smbClient):
 def get_client(target, user, options, port):
     try:
         smbClient = SMBConnection(
-            "*\\*SMBSERVER*", target.ip, timeout=options.timeout, sess_port=int(port)
+            target.name,
+            target.ip,
+            timeout=options.timeout,
+            sess_port=int(port)
         )
         if options.kerberos is True:
+            logger.debug('Kerberos mode')
             smbClient.kerberosLogin(
                 user.username,
                 user.password,
