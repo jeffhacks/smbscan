@@ -1,2 +1,2 @@
-impacket==0.11.0
+impacket==0.12.0
 python-slugify==8.0.4
