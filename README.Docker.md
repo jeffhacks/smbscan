@@ -4,10 +4,10 @@ Build:
 docker build . --no-cache --tag smbscan
 
 Run:
-docker run --rm -v $(pwd)/logs:/app/logs smbscan --threads 10 -d 0 192.168.0.0/24
+docker run --rm -it -v $(pwd)/logs:/app/logs smbscan --debug --threads 10 -d 0 192.168.0.0/24
 
 Issues:
-When using -u for user, password can't be read from stdin :(
+~~When using -u for user, password can't be read from stdin :(~~ use --it
 
 ### Building and running your application
 
