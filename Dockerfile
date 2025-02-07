@@ -1,5 +1,5 @@
 ARG PYTHON_VERSION=3.9.6
-FROM python:${PYTHON_VERSION}-slim as base
+FROM python:${PYTHON_VERSION}-slim AS base
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -23,6 +23,7 @@ RUN adduser \
     --uid "${UID}" \
     appuser
 
+# Debugging tools
 # RUN apt-get update && apt-get install -y iputils-ping net-tools netcat
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
@@ -38,11 +39,6 @@ USER appuser
 
 # Copy the source code into the container.
 COPY . .
-
-USER root
-RUN pip install --no-cache-dir -r requirements.txt
-
-USER appuser
 
 # Run the application.
 ENTRYPOINT ["python3", "src/smbscan.py"]
