@@ -38,7 +38,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER appuser
 
 # Copy the source code into the container.
-COPY /smbscan /smbscan/
+COPY /src src/
+COPY /wordlists wordlists/
 
 # Run the application.
-ENTRYPOINT ["python3", "/smbscan/src/smbscan.py"]
+ENTRYPOINT ["python3", "src/smbscan.py"]
