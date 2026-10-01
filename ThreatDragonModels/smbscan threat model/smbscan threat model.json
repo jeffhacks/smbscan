@@ -1,0 +1,18 @@
+{
+  "version": "2.6.2",
+  "release_version": "1",
+  "released_at": "2026-10-01",
+  "summary": {
+    "title": "smbscan threat model",
+    "owner": "Yianna",
+    "description": "Tool to detect insecure smb configuration and exposed secrets.",
+    "id": 0
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [],
+    "diagramTop": 0,
+    "reviewer": "Jeff",
+    "threatTop": 0
+  }
+}
